@@ -13,65 +13,51 @@ The arrows show how one formalized layer supplies the next theorem or applicatio
 
 ```mermaid
 flowchart TD
-    subgraph COMB["Combinatorial spine"]
-        SC["Finite simplicial complexes<br/>and F₂ chains"]
-        PS["Pseudo-simplex incidence"]
-        CS["Chain-simplex<br/>boundary identity"]
-        OR["Indexed linear orders<br/>dominance and cells"]
+    SC["Finite simplicial complexes<br/>simplex families and F₂ chains"]
+    PS["Pseudo-simplex incidence"]
+    CS["Chain-simplex boundary identity"]
+    OR["Indexed linear orders<br/>dominant sets and associated families"]
 
-        SC --> PS --> CS
-        OR --> PS
-    end
+    OM["Signed-circuit oriented matroids<br/>weak elimination only"]
+    WS["Finite weak-to-strong elimination"]
+    DU["Underlying matroid, cocircuits,<br/>Farkas, duality, Todd"]
+    LX["Constructed lexicographic<br/>one-point extension"]
 
-    subgraph OM["Oriented-matroid spine"]
-        WC["Weak signed-circuit axioms"]
-        SE["Finite strong elimination"]
-        DU["Underlying matroid, duality,<br/>Farkas and Todd"]
-        LX["Lexicographic<br/>one-point extension"]
+    ND["Nondegenerate coloring<br/>Theorem 6.5 and odd parity"]
+    PT["Perturbation setup<br/>Lemmas 8.1–8.4"]
+    GS["Theorem 8.5<br/>generalized Scarf"]
 
-        WC --> SE --> DU --> LX
-    end
+    VS["Realizable/vector Scarf<br/>Section 7"]
+    CL["Classical colorful-cell Scarf"]
+    BR["Scarf → Brouwer<br/>standard and affine simplices"]
+    KA["Vector Scarf → Kakutani<br/>closed-graph limit"]
 
-    subgraph ST["Scarf theorem spine"]
-        ND["Nondegenerate coloring<br/>Theorem 6.5"]
-        PT["Perturbation<br/>Lemmas 8.1–8.4"]
-        GS["Generalized Scarf<br/>Theorem 8.5"]
-        CL["Classical colorful-cell Scarf"]
-        VS["Realizable / vector Scarf"]
+    CH["Section 10 chains and<br/>intersection numbers"]
+    T8A["Theorem 10.8<br/>paper intersection route"]
+    T8B["Theorem 10.8<br/>oriented-matroid route"]
+    T910["Theorems 10.9 and 10.10"]
 
-        DU --> ND
-        LX --> PT
-        ND --> PT --> GS
-        CS --> GS
-        OR --> GS
-        ND --> CL
-        OR --> CL
-        GS --> VS
-    end
+    FR["Freudenthal/Scarf complexes<br/>Section 4"]
+    GT["Finite geometric triangulations<br/>minimal data → purity/nonbranching"]
 
-    subgraph FP["Fixed-point applications"]
-        BR["Brouwer<br/>standard and affine simplices"]
-        KA["Kakutani<br/>closed-graph limit"]
+    SC --> PS --> CS
+    OR --> PS
+    OM --> WS --> DU --> LX
+    DU --> ND
+    LX --> PT
+    ND --> PT --> GS
+    CS --> GS
+    OR --> GS
 
-        CL --> BR
-        VS --> KA
-        BR --> KA
-    end
+    GS --> VS --> KA
+    GS --> CL --> BR
 
-    subgraph GEO["Geometric and Section 10 routes"]
-        CH["Euclidean chains and<br/>intersection numbers"]
-        T8A["Theorem 10.8<br/>intersection route"]
-        T8B["Theorem 10.8<br/>oriented-matroid route"]
-        T910["Theorems 10.9 and 10.10"]
-        FR["Freudenthal / Scarf complexes<br/>Section 4"]
-        GT["Finite geometric<br/>triangulations"]
-
-        CS --> CH --> T8A --> T910
-        DU --> T8B --> T910
-        FR --> CS
-        FR --> T910
-        GT --> T910
-    end
+    CS --> CH --> T8A --> T910
+    DU --> T8B --> T910
+    FR --> CS
+    FR --> T910
+    GT --> CS
+    GT --> T910
 ```
 
 The two Theorem 10.8 nodes are dependency-independent: one follows the paper's intersection-number
