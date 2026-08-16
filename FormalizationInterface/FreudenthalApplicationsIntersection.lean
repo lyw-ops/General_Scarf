@@ -1,6 +1,6 @@
 import BeyondSperner.Freudenthal.Applications.VectorHedgehog
-import FormalizationInterface.Theorem10_9Intersection
-import FormalizationInterface.Theorem10_10Intersection
+import FormalizationInterface.VectorHedgehogIntersection
+import FormalizationInterface.InwardTangentIntersection
 
 /-!
 # Freudenthal--Scarf applications through the intersection route
@@ -12,6 +12,7 @@ proof of Theorem 10.8.
 
 namespace BeyondSperner
 namespace IntegerSimplex
+namespace Intersection
 
 open Classical Set
 
@@ -19,7 +20,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The concrete positive-scale Theorem 10.9 through the intersection proof
 of Theorem 10.8. -/
-theorem freudenthal_theorem10_9_via_intersection
+theorem exists_fullSimplex_mem_convexHull_colorPoints_of_isVectorHedgehogColoring
     {N n : ℕ} (hN : 0 < N)
     (b : AffineBasis (Fin (n + 1)) ℝ E)
     (c : ((pointOrders N n).associatedFamily).Vertex → E)
@@ -45,13 +46,13 @@ theorem freudenthal_theorem10_9_via_intersection
     intro C tau htau v hv i hi
     exact coord_affinePointPosition_eq_zero_of_mem_associatedComplex
       hN b htau hv (Finset.mem_sdiff.mp hi).2
-  exact AffineColoring.theorem10_9_via_intersection D b p c
+  exact AffineColoring.Intersection.exists_fullSimplex_mem_convexHull_colorPoints_of_isVectorHedgehogColoring D b p c
     (pointOrders N n).associatedFamily_isChainSimplex
     hface hhedgehog z hz
 
 /-- The concrete positive-scale Theorem 10.10 through the intersection proof
 of Theorem 10.8. -/
-theorem freudenthal_theorem10_10_via_intersection
+theorem exists_fullSimplex_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring
     {N n : ℕ} (hN : 0 < N)
     (b : AffineBasis (Fin (n + 1)) ℝ E)
     (hb : AffineColoring.IsCenteredAffineBasis b)
@@ -91,11 +92,12 @@ theorem freudenthal_theorem10_10_via_intersection
     simpa using associatedComplex_isPureOfCardinality_of_pos
       (N := N) (n := n) hN
   obtain ⟨sigma, hsigma, hcard, hzero⟩ :=
-    AffineColoring.theorem10_10_via_intersection D b hb p c
+    AffineColoring.Intersection.exists_fullSimplex_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring D b hb p c
       (pointOrders N n).associatedFamily_isChainSimplex
       hface hinward hAmbient hPure
   refine ⟨sigma, hsigma, ?_, hzero⟩
   simpa using hcard
 
+end Intersection
 end IntegerSimplex
 end BeyondSperner

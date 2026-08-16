@@ -1,6 +1,7 @@
 import BeyondSperner.Coloring.Affine
 import BeyondSperner.FixedPoint.AffineBrouwer
 import BeyondSperner.FixedPoint.CompactConvexBrouwer
+import BeyondSperner.FixedPoint.CompactConvexKakutani
 import BeyondSperner.Coloring.AffineEnvelope
 import BeyondSperner.Euclidean.AffineGeometry
 import BeyondSperner.Simplicial.ChainSimplex

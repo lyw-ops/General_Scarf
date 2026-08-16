@@ -255,7 +255,7 @@ theorem isFreudenthalTopSimplex_of_isCell
     {sigma : Finset (Point N n)}
     (hcell : (pointOrders N n).IsCell sigma Finset.univ) :
     IsFreudenthalTopSimplex sigma := by
-  obtain ⟨a, _, omega, heq⟩ := theorem4_5 hcell
+  obtain ⟨a, _, omega, heq⟩ := exists_image_pointCoords_eq_stepSimplex hcell
   exact ⟨a, omega, heq⟩
 
 /-- Proven half of the complex isomorphism in Theorem 4.8: every simplex of

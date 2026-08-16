@@ -123,7 +123,7 @@ theorem chain_stokes_of_pairwise
 /-- Theorem 10.5: for an `n`-chain and a one-chain in the paper's exact
 general position, intersection with the boundary may be transferred from
 the left chain to the right chain. -/
-theorem theorem10_5
+theorem oneChainIntersection_boundary_eq_pointChainIntersection_boundary
     (n : ℕ) (c d : Chain E)
     (hdim : Module.finrank ℝ E = n)
     (hgp : OneChainsInGeneralPosition n c d) :
@@ -135,8 +135,8 @@ theorem theorem10_5
   have hpairGP : OneSimplexInGeneralPosition sigma omega :=
     hgp.2.2 sigma hsigma omega homega
   by_cases hgeneric : IsGeneric sigma
-  · exact lemma10_1 n sigma omega hdim hsigmaM hgeneric hpairGP
-  · have hzero := lemma10_4 n sigma omega hdim hsigmaM hgeneric hpairGP
+  · exact boundary_intersection_eq_point_boundary_intersection n sigma omega hdim hsigmaM hgeneric hpairGP
+  · have hzero := boundary_intersections_eq_zero_of_not_isGeneric n sigma omega hdim hsigmaM hgeneric hpairGP
     exact hzero.1.trans hzero.2.symm
 
 /-- In a zero-dimensional real vector space, a homogeneous zero-chain with
@@ -196,20 +196,20 @@ theorem zero_chain_eq_zero_of_boundary_eq_zero
 /-- Corollary 10.6, including the dimension-zero base case omitted by the
 paper's proof: a top-dimensional cycle has zero point-intersection number at
 every point in general position with respect to the chain. -/
-theorem corollary10_6
+theorem pointChainIntersection_eq_zero_of_boundary_eq_zero
     (n : ℕ) (c : Chain E)
     (hdim : Module.finrank ℝ E = n)
     (hc : IsMChain n c) (hcycle : boundary c = 0)
     (z : E) (hz : PointInGeneralPositionWithChain c z) :
     pointChainIntersection c (singletonChain {z}) = 0 := by
   by_cases hn : 0 < n
-  · apply lemma10_2 n c hdim hn hc
+  · apply pointChainIntersection_eq_zero_of_boundary_intersection_eq_zero n c hdim hn hc
     · intro omega homega
       have hchains :
           OneChainsInGeneralPosition n c (singletonChain omega) :=
         (oneChainsInGeneralPosition_singleton_iff n c omega).2
           ⟨hc, homega⟩
-      have hstokes := theorem10_5 n c (singletonChain omega) hdim hchains
+      have hstokes := oneChainIntersection_boundary_eq_pointChainIntersection_boundary n c (singletonChain omega) hdim hchains
       simpa [hcycle, oneChainIntersection] using hstokes.symm
     · exact hz
   · have hn0 : n = 0 := Nat.eq_zero_of_not_pos hn

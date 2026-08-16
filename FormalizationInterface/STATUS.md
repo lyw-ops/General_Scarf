@@ -18,8 +18,17 @@ now includes exact circuit signings, primary lifts, the strict secondary rank-tw
 construction, exact orthogonal-pair assembly, and `IsLexicographicFor`.  The audit also includes
 the finite proof that weak signed-circuit elimination implies strong elimination, after removing
 strong elimination from the `Data` structure.
-It now also covers the complete Section 3 Scarf--Brouwer route, its explicit transport from the
-standard simplex to the convex hull of an arbitrary finite real affine basis, and the checked arithmetic/order
+It now also covers the complete Section 3 Scarf--Brouwer route and its explicit transport from the
+standard simplex to the convex hull of an arbitrary finite real affine basis.  The audited
+fixed-point layer further contains every compact set in a full affine simplex, constructs the
+nearest-point projection onto a nonempty compact convex set in Euclidean space, proves its
+variational characterization, nonexpansiveness, and retraction law, and uses the resulting
+affine-simplex retraction argument.  A continuous linear equivalence with Euclidean space then
+gives Brouwer's theorem for every nonempty compact convex subset of an arbitrary
+finite-dimensional real normed space. The same enclosing-simplex, metric-projection, and
+Euclidean-transport infrastructure now carries the Section 9 Kakutani theorem to nonempty compact
+convex subsets of arbitrary finite-dimensional real normed spaces, both in closed-graph form and
+in the compact-valued upper-hemicontinuous form. The audit also covers the checked arithmetic/order
 and full-cell-classification layers of Section 4: Lemmas 4.1--4.4 and 4.7, Theorem 4.5,
 fixed-sum injectivity of the cumulative-coordinate map, and both finite-set directions of
 Lemma 4.6.  The chain-level boundary induction, formula (19), Theorem 4.8, Corollary 4.10, and
@@ -53,15 +62,20 @@ spine for the generalized Scarf theorem together with the following expansion:
 
 - kernel-checked coverage of the listed results in Sections 1, 2, 5, 6, and 8;
 - the complete Section 3 Scarf--Brouwer argument, including the quantitative envelope estimate,
-  compact finite nets, the limiting fixed-point proof, and the barycentric homeomorphism giving
-  Brouwer on the convex hull of an arbitrary finite real affine basis;
+  compact finite nets, and the limiting fixed-point proof; its fixed-point application layer also
+  contains a full affine simplex around a compact set, constructs the Euclidean nearest-point
+  retraction onto a nonempty compact convex set and proves it nonexpansive, applies the
+  affine-simplex theorem, and transports the result through a continuous linear equivalence to
+  every finite-dimensional real normed space;
 - the arithmetic/order, full-cell-classification, and coordinate-change portion of Section 4
   through Lemmas 4.1--4.7, including Theorem 4.5 and the full finite-set equivalence of Lemma 4.6;
 - the full vector-coloring development of Section 7: Lemma 7.1, the realizable oriented-matroid
   construction, Theorem 7.2, Lemma 7.3, and the final vector Scarf theorem;
 - the Todd and constructed lexicographic-extension developments from Appendices A.1--A.2;
 - the proved generalized Scarf theorem following Theorem 8.5;
-- Section 9 through the Scarf--Kakutani fixed-point theorem;
+- Section 9 through the Scarf--Kakutani fixed-point theorem, together with its closed-graph and
+  compact-valued upper-hemicontinuous extensions to nonempty compact convex subsets of arbitrary
+  finite-dimensional real normed spaces;
 - the Section 10 `F₂` chain identities and arbitrary-map normalized pushforward, the exact
   general-position/intersection definitions, Lemmas 10.1--10.4, Theorem 10.5, Corollary 10.6,
   the paper's forward intersection-number proofs of Lemma 10.7 and Theorem 10.8, Lemma 10.3,
@@ -86,8 +100,8 @@ Theorem 10.8.  `BeyondSperner.Euclidean.Intersection.AffineColoring` then formal
 limit step: the complement of the finite small-affine-span locus is dense, every good interior
 point is covered by a full-cardinality generic envelope simplex, and the finite union of those
 closed convex hulls covers the closure of the reference-simplex interior.  The compatibility
-adapter in `FormalizationInterface/Theorem10_8Intersection` converts this result exactly to
-`IsAffineSolution`, independently of `AffineColoring.theorem10_8`.  The same Lemma 10.7 conclusion
+adapter in `FormalizationInterface/AffineSolutionIntersection` converts this result exactly to
+`IsAffineSolution`, independently of `AffineColoring.exists_isAffineSolution`.  The same Lemma 10.7 conclusion
 is also kernel-proved in `BeyondSperner.Coloring.AffineEnvelope` from that oriented-matroid Theorem 10.8, with no
 general-position assumption. The full local `GeometricTriangulation.IsNonbranching`
 property is now derived from the minimal geometric coverage data: boundary codimension-one faces
@@ -99,7 +113,9 @@ union boundary extension, is kernel-proved at the exact abstract obligation laye
 concrete positive-scale Freudenthal complex, those obligations and both resulting top-simplex
 theorems are kernel-proved.  Section 9 is kernel-proved,
 including Lemma 9.1, the fixed-or-cell form of Lemma 9.2, equations (34)--(36), the
-compactness/closed-graph limit, and Kakutani's theorem.  In Section 4,
+compactness/closed-graph limit, and Kakutani's theorem. Its compact-convex extension is also
+kernel-proved in finite-dimensional real inner-product and normed spaces, including the
+compact-valued upper-hemicontinuous formulation. In Section 4,
 formulas (18), (19), and (21), equation (20), Theorem 4.8, and Corollary 4.10 are kernel-proved for
 `0 < N`.  Corollary 4.9 now has both its exact finite facet equality and a separate geometric
 realization: genuine `Geometry.SimplicialComplex` structures are constructed on `Gamma` and
@@ -124,7 +140,7 @@ Freudenthal vertex sets a triangulation by definition.
 | secondary cocircuits and assembly | primary lifts cover every support containing `p`. `hasStrictSecondaryCocircuitSignings` proves the genuinely new `p = 0` case by closed-hyperplane/coline reduction, ordinary circuit elimination, Todd conformalization, exact support coverage, and orthogonality to every explicit circuit signing. The strict result implies the full `HasSecondaryCocircuitSignings`; the code then constructs an exact `OrthogonalPair`, recovers `Data`, proves the underlying matroid is the principal extension, constructs `OnePointExtension`, and proves `IsLexicographicFor` |
 | simplex primitives | finite complexes including the empty face, simplex-families, dimension upper bounds, pseudo-simplex incidence counts, `F₂` chains and boundaries, Theorem 1.2 (`IsPseudoSimplex.isChainSimplex`), the envelope complex and dimension bound, and the two envelope preservation results (Theorems 1.5 and 1.6) |
 | order primitives | indexed orders, dominance/cell/face predicates, Lemmas 2.1--2.6, Theorem 2.7, the associated complex/family including its empty face and dimension bound, Corollary 2.9, the concrete three-level extended orders, and exact invariance of dominance, cells, associated simplices, and associated complexes under simultaneous order-preserving equivalences of indices and vertices |
-| classical Scarf and Brouwer | the canonical simplex oriented matroid, exact good-basis/color-cover equivalence, oddness and existence of a colorful cell, coordinate-refining cyclic orders, the quantitative envelope-diameter lemma, finite dense subsets obtained from compactness, close coordinate witnesses, and the continuous fixed-point limit theorem on the standard simplex; `BeyondSperner.FixedPoint.AffineBrouwer` additionally proves the barycentric-coordinate homeomorphism for an arbitrary finite real affine basis and transports the fixed point theorem to its convex hull |
+| classical Scarf and Brouwer | the canonical simplex oriented matroid, exact good-basis/color-cover equivalence, oddness and existence of a colorful cell, coordinate-refining cyclic orders, the quantitative envelope-diameter lemma, finite dense subsets obtained from compactness, close coordinate witnesses, and the continuous fixed-point limit theorem on the standard simplex; `BeyondSperner.FixedPoint.AffineBrouwer` proves the barycentric-coordinate homeomorphism and Brouwer theorem for the convex hull of an arbitrary finite real affine basis; `BeyondSperner.FixedPoint.CompactConvexBrouwer` contains compact sets in full affine simplices, develops the nonexpansive nearest-point retraction in Euclidean space, and transports the conclusion to every nonempty compact convex subset of an arbitrary finite-dimensional real normed space |
 | integer-simplex arithmetic | exact cyclic lexicographic orders; cyclic transfers; Lemma 4.1; the full-cardinality minimum-map argument for Lemma 4.2; the coordinate-range bound of Lemma 4.3; Lemma 4.7 for arbitrary `C`, both on a literal cell and on every vertex of its generated associated complex; fixed-sum injectivity and the monotone-simplex image of the prefix map; the explicit consecutive-difference inverse and equivalence `pointGammaEquiv` between `Point` and integral `Gamma`; preservation of total coordinate sum along every transfer sequence; transfer/prefix identities; and the exact image/cardinality calculations for permutation step simplices |
 | integer-simplex cell classification | canonical increasing enumerations in every cyclic order; the minimum-map equivalence onto the cell; exact low/high coordinate blocks; invariance of directed cyclic edges under change of order; Lemma 4.4 with its rotation and two coordinate changes; proof that every remaining coordinate is unchanged; the induced permutation fixing zero; equality of the ordered vertex sequence with the transfer sequence; and Theorem 4.5 as an exact finite-set equality after the injective coordinate embedding |
 | Freudenthal-complex and Theorem 4.8 | the full finite-set equivalence between original transfer simplices and cumulative-coordinate Freudenthal simplices (Lemma 4.6); an actual downward-closed finite complex generated by those facets contained in `Point N n`; proof that the existential step-simplex presentation is exactly the cardinality-`n+1` facet set; its explicit `F₂` top chain; and `freudenthalComplex_isPureOfCardinality_of_pos`, which extends every face, including the empty face, to a cardinality-`n+1` facet.  The general chain-uniqueness theorem is proved from purity, non-branching, strong facet-connectivity, and nonempty boundary; the intrinsic cumulative-rank classification handles every codimension-one face.  Concrete non-branching holds for `0 < n` and concrete strong facet-connectivity for all `N,n`.  The exact boundary classification proves one cofacet on coordinate faces and two elsewhere.  Consequently formula (19), equation (20), top-chain equality, equality of the Scarf and Freudenthal complexes, and purity of the full associated complex are proved for every `n` when `0 < N`. |
@@ -136,12 +152,13 @@ Freudenthal vertex sets a triangulation by definition.
 | realizable oriented matroid | signed circuits defined as sign vectors of support-minimal nonzero real dependences; sign reversal, circuit incomparability, and weak elimination are proved. Oriented independence is equivalent to linear independence, the standard-basis range is an oriented-matroid basis, acyclicity is equivalent to absence of nonzero nonnegative dependence, and convex-hull membership outside the set is equivalent to a supported nonnegative linear representation. The protected-coordinate extraction used in the convex proof is explicit. |
 | vector Theorem 7.2 and Scarf | boundedness and equation (29) construct a genuine `MatroidColoring.Framework`; Theorem 8.5 supplies the completed good basis; cardinality plus linear independence construct a `Module.Basis` indexed by the literal vector image; the convex bridge supplies a nonnegative coefficient function indexed by that same image and proves its finite sum is `b`. `VectorScarf.vectorScarf` then uses the checked associated-family theorem and Lemma 7.3 to obtain the final dominant set. `VectorScarf.RawData.scarf` starts from a literal `φ : X ⊕ I → ℝ^I`, proves its packaged vector map equals `φ`, and states the basis and coefficient conclusion directly on `S.image φ`. |
 | Section 9 and Kakutani | `vectorColor` is the literal `f(x)-x+b`, and `vectorColor_eq_barycenter_iff` exposes the exact fixed-point exception. Lemma 9.1 derives coefficient bounds and boundedness from coordinate sums. Formula (34) is a literal vector image, equation (35) is reindexed by `I`, and Lemma 9.2 is the mathematically total fixed-stage-or-infinite-`C` alternative. Canonical finite dense samples, shrinking envelopes, one compact subsequence for base points/value selections/coefficients, closed graph passage, vanishing off `C`, and the coefficient calculation after (36) yield `scarf_kakutani_fixedPoint`. No pre-existing fixed-point theorem is used. |
-| Section 10 chain, intersection, and affine layer | `boundary_boundary` proves `∂²=0` coefficientwise. `normalizedMapChainHom` is the paper's arbitrary-vertex-map pushforward: a collapsed simplex is zero, and the degenerate two-facet cancellation proves that it commutes with boundary. `EuclideanIntersection` defines general position using the paper's convex hulls (not stronger affine-span avoidance), proves exact face intersections for generic simplices, reduces a segment/simplex intersection to a compact parameter interval, excludes a singleton/tangential intersection, and proves Lemmas 10.1 and 10.2. `BeyondSperner.Euclidean.Intersection.DegenerateSimplex` proves the nongeneric case in full, with a direct affine-dependence/two-facet parity proof in exact codimension one. `chain_stokes_of_pairwise` isolates the bilinear algebra, `theorem10_5` performs the generic/nongeneric split, and `corollary10_6` includes a separate dimension-zero base case. `lemma10_7_intersection` implements the paper's forward envelope-cycle/intersection argument and returns a literal top envelope simplex; normalized-map degeneracy and finite-witness extraction are both explicit. `theorem10_8_envelope_intersection` proves the paper's next general-position/limit step through an equivalent finite-closed-union argument and retains both source and image cardinality. `theorem10_8_via_intersection` converts it exactly to formula (40). Provider-parameterized layers now thread this solution through Theorems 10.9 and 10.10: the latter reconstructs nonnegative convex weights from the public interface and proves every artificial basis weight is zero, rather than assuming the enriched coordinate witness. `lemma10_3_atMost` proves the affinely independent at-most-`m+1` Carathéodory form, and `lemma10_3` enlarges it to the paper's exact `m+1`-vertex face statement. Independently, `theorem10_8_coordinate` and `theorem10_8` provide the oriented-matroid route. `lemma10_7_envelope_of_theorem10_8` supplies an alternate reverse-direction covering proof without general position. |
-| Theorem 10.9 | `theorem10_9_interior_of_solution_provider` isolates the cyclic proper-subset/closed-half-space argument from the source of Theorem 10.8. `theorem10_9_of_interior_provider` isolates the finite-closed-union boundary extension. Both the default theorem and `theorem10_9_via_intersection` instantiate these checked layers. The only geometric input is the explicit face-coordinate compatibility of vertices of `D(C)`. |
-| Freudenthal Theorem 10.9 | `freudenthal_theorem10_9` supplies the face-coordinate compatibility from Lemma 4.7 and `affinePointPosition`; `freudenthal_theorem10_9_via_intersection` proves the same statement through the independent intersection route. Both retain only the literal vector-hedgehog condition, positive scale, and target membership. |
-| general geometric triangulation bridge | `GeometricTriangulation.Data` stores only an actual geometric simplicial complex, finiteness of its vertex set, and exact coverage of the reference simplex. `faceComplex` and `family` construct the induced reference-face family; `faceComplex_card_le` derives the dimension bound from affine independence. Exact induced coverage, the full abstract/geometric face bridge, automatic purity, and local one-or-two coface incidence are proved. Thus `isNonbranching` supplies the pseudo/chain structure used by both default geometric applications and `geometric_theorem10_9_via_intersection`/`geometric_theorem10_10_via_intersection`; no pseudo/chain/purity/incidence conclusion is a field of `Data`. |
-| Theorem 10.10 core | `barycentricCenter` and `centeredOutsideSum_basis` supply the centered functional. The original `theorem10_10_coordinate_core` consumes explicit coefficients. Independently, `zero_mem_colorHull_of_affineSolution` extracts weights from ordinary convex-hull membership in `IsAffineSolution`, proves their weighted centered sum is zero, and eliminates all strictly positive artificial basis terms. `theorem10_10_core_of_affineSolution` and `theorem10_10_of_core` separate provider choice from top-simplex extension; `theorem10_10_via_intersection` instantiates both. Ambient inclusion and purity remain genuine triangulation obligations, not consequences of `IsChainSimplex`. |
-| Freudenthal Theorem 10.10 | arbitrary-index coordinate-face transport proves ambient inclusion, Theorem 4.8 supplies purity, and `affinePointPosition` plus Lemma 4.7 supplies face coordinates. Both `freudenthal_theorem10_10` and `freudenthal_theorem10_10_via_intersection` consequently have no face, inclusion, or purity assumptions. |
+| compact-convex Kakutani extension | `KakutaniScarf.scarf_kakutani_fixedPoint_compactConvex_inner` lifts an ambient-valued correspondence to an enclosing standard simplex using affine coordinates and Euclidean metric projection. `KakutaniScarf.scarf_kakutani_fixedPoint_compactConvex` transports the result through a continuous linear equivalence for arbitrary finite-dimensional real normed spaces, and `KakutaniScarf.kakutani_fixedPoint_compactConvex_of_upperHemicontinuous` derives the relative closed graph from compact values and upper hemicontinuity. No pre-existing general Kakutani or Schauder theorem is used. |
+| Section 10 chain, intersection, and affine layer | `boundary_boundary` proves `∂²=0` coefficientwise. `normalizedMapChainHom` is the paper's arbitrary-vertex-map pushforward: a collapsed simplex is zero, and the degenerate two-facet cancellation proves that it commutes with boundary. `EuclideanIntersection` defines general position using the paper's convex hulls (not stronger affine-span avoidance), proves exact face intersections for generic simplices, reduces a segment/simplex intersection to a compact parameter interval, excludes a singleton/tangential intersection, and proves Lemmas 10.1 and 10.2. `BeyondSperner.Euclidean.Intersection.DegenerateSimplex` proves the nongeneric case in full, with a direct affine-dependence/two-facet parity proof in exact codimension one. `EuclideanIntersection.chain_stokes_of_pairwise` isolates the bilinear algebra, `EuclideanIntersection.oneChainIntersection_boundary_eq_pointChainIntersection_boundary` performs the generic/nongeneric split, and `EuclideanIntersection.pointChainIntersection_eq_zero_of_boundary_eq_zero` includes a separate dimension-zero base case. `EuclideanIntersection.exists_envelope_simplex_of_generalPosition` implements the paper's forward envelope-cycle/intersection argument and returns a literal top envelope simplex; normalized-map degeneracy and finite-witness extraction are both explicit. `EuclideanIntersection.exists_generic_envelope_simplex` proves the paper's next general-position/limit step through an equivalent finite-closed-union argument and retains both source and image cardinality. `AffineColoring.Intersection.exists_isAffineSolution` converts it exactly to formula (40). Provider-parameterized layers now thread this solution through Theorems 10.9 and 10.10: the latter reconstructs nonnegative convex weights from the public interface and proves every artificial basis weight is zero, rather than assuming the enriched coordinate witness. `AffineGeometry.exists_affineIndependent_subset_card_le_finrank_add_one` proves the affinely independent at-most-`m+1` Carathéodory form, and `AffineGeometry.exists_subset_card_eq_finrank_add_one_mem_convexHull` enlarges it to the paper's exact `m+1`-vertex face statement. Independently, `AffineColoring.exists_isSolution` and `AffineColoring.exists_isAffineSolution` provide the oriented-matroid route. `AffineColoring.exists_envelope_simplex` supplies an alternate reverse-direction covering proof without general position. |
+| Theorem 10.9 | `AffineColoring.exists_fullSimplex_mem_convexHull_colorPoints_of_isStrictInteriorPoint_of_solution_provider` isolates the cyclic proper-subset/closed-half-space argument from the source of Theorem 10.8. `AffineColoring.exists_fullSimplex_mem_convexHull_colorPoints_of_interior_cover` isolates the finite-closed-union boundary extension. Both `AffineColoring.exists_fullSimplex_mem_convexHull_colorPoints_of_isVectorHedgehogColoring` and its `AffineColoring.Intersection` counterpart instantiate these checked layers. The only geometric input is the explicit face-coordinate compatibility of vertices of `D(C)`. |
+| Freudenthal Theorem 10.9 | `IntegerSimplex.exists_fullSimplex_mem_convexHull_colorPoints_of_isVectorHedgehogColoring` supplies the face-coordinate compatibility from Lemma 4.7 and `affinePointPosition`; `IntegerSimplex.Intersection.exists_fullSimplex_mem_convexHull_colorPoints_of_isVectorHedgehogColoring` proves the same statement through the independent intersection route. Both retain only the literal vector-hedgehog condition, positive scale, and target membership. |
+| general geometric triangulation bridge | `GeometricTriangulation.Data` stores only an actual geometric simplicial complex, finiteness of its vertex set, and exact coverage of the reference simplex. `faceComplex` and `family` construct the induced reference-face family; `faceComplex_card_le` derives the dimension bound from affine independence. Exact induced coverage, the full abstract/geometric face bridge, automatic purity, and local one-or-two coface incidence are proved. Thus `isNonbranching` supplies the pseudo/chain structure used by both default `GeometricTriangulation` applications and their `GeometricTriangulation.Intersection` counterparts; no pseudo/chain/purity/incidence conclusion is a field of `Data`. |
+| Theorem 10.10 core | `AffineColoring.barycentricCenter` and `AffineColoring.centeredOutsideSum_basis` supply the centered functional. `AffineColoring.exists_face_barycentricCenter_mem_convexHull_colorPoints` consumes explicit coefficients. Independently, `AffineColoring.zero_mem_colorHull_of_affineSolution` extracts weights from ordinary convex-hull membership in `IsAffineSolution`, proves their weighted centered sum is zero, and eliminates all strictly positive artificial basis terms. `AffineColoring.exists_face_zero_mem_convexHull_colorPoints_of_isAffineSolution` and `AffineColoring.exists_fullSimplex_zero_mem_convexHull_colorPoints_of_face` separate provider choice from top-simplex extension; the default and `AffineColoring.Intersection` inward-tangent theorems instantiate both. Ambient inclusion and purity remain genuine triangulation obligations, not consequences of `IsChainSimplex`. |
+| Freudenthal Theorem 10.10 | arbitrary-index coordinate-face transport proves ambient inclusion, Theorem 4.8 supplies purity, and `affinePointPosition` plus Lemma 4.7 supplies face coordinates. Both `IntegerSimplex.exists_fullSimplex_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring` and `IntegerSimplex.Intersection.exists_fullSimplex_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring` consequently have no face, inclusion, or purity assumptions. |
 | coloring interfaces | `Framework`, nondegeneracy predicate, coloring/image/completed-image/solution predicates, the elementary proof that the distinguished basis is good, and complete proof bodies for Lemmas 6.1--6.4 and Theorem 6.5; the proof includes the `F₂` cochain evaluation, boundary normalization, and the envelope-top-simplex/solution-pair bijection |
 | extension interfaces | the types `OnePointExtension`, `IsLexicographicFor`, and `PerturbationSetup`, cocircuit-lifting interfaces derived from the lexicographic specification, and the well-formed signed set `fundamentalCircuit` |
 | perturbation consequences | both parts of Lemma 8.1 and all of Lemma 8.2 (existence, sign containment, and uniqueness), Corollaries 8.3 and 8.4, construction of the deleted framework and lifted coloring, nondegeneracy of the deleted framework, the completed-image embedding identity, and the good-basis transfer theorem are kernel-proved for an explicitly supplied `PerturbationSetup`; they do not themselves depend on `sorryAx` |
@@ -151,7 +168,7 @@ Every row above was checked by the readable representative axiom audit.  In addi
 `FormalizationInterface/AuditAll.lean` enumerates every declaration whose fully qualified name is
 under `BeyondSperner` (including declarations from the compatibility modules) and rejects declared
 axioms, any transitive dependency on `sorryAx`, and every axiom outside `propext`,
-`Classical.choice`, and `Quot.sound`.  At this revision it checks 3660 declarations.  This does not
+`Classical.choice`, and `Quot.sound`.  At this revision it checks 3678 declarations.  This does not
 assert that a chosen definition is the unique possible formalization of the paper, nor that a
 theorem outside the stated scope has been formalized.
 
@@ -179,9 +196,9 @@ None in the `BeyondSperner` mathematical module tree or in the audited dependenc
   secondary `p = 0` signing is constructed in `OrientedMatroid/LexicographicSecondary.lean` from ordinary
   closure/circuit elimination and the already proved Todd circuit theorem, and its exact support
   and orthogonality are checked explicitly.
-- `theorem6_5` is kernel-proved, including its oddness assertion.  Lemmas 8.1 and 8.2 are
+- `solutionPairs_nonempty_and_odd_card` is kernel-proved, including its oddness assertion.  Lemmas 8.1 and 8.2 are
   kernel-proved for any supplied setup, based on signed fundamental circuits/cocircuits,
-  ordinary-matroid augmentation, and circuit--cocircuit orthogonality. `theorem8_5` has a complete
+  ordinary-matroid augmentation, and circuit--cocircuit orthogonality. `exists_isSolution` has a complete
   Lean proof body: it builds the perturbation setup, applies Theorem 6.5 after deletion, and
   transfers the resulting good basis back.  Its dependency closure, and that of the final theorem,
   is now free of `sorryAx`.
@@ -191,7 +208,7 @@ None in the `BeyondSperner` mathematical module tree or in the audited dependenc
   land in `M - b`.  `VectorScarf.RawData` records the last two requirements as `b_ne_basis` and
   `old_ne_b`; `RawData.scarf` takes boundedness explicitly.  Without these conditions, the
   printed unrestricted reading is not justified by that proof.
-- The proof body of `VectorColoring.Framework.theorem7_2` is mathematically complete but does
+- The proof body of `VectorColoring.Framework.exists_isSolution` is mathematically complete but does
   not reproduce the sequential perturbation argument printed in Section 7.  It factors through
   the stronger kernel-proved oriented-matroid Theorem 8.5 and then uses the realizability bridges
   to recover an actual linear basis and nonnegative coefficients.  There is no dependency cycle,
@@ -220,14 +237,18 @@ None in the `BeyondSperner` mathematical module tree or in the audited dependenc
   cyclic basis shift and proper-face half-space contradiction, then separately proves that the
   union of full-simplex color hulls is a finite union of closed sets and that the reference simplex
   is the closure of its nonempty interior.  These stages are now provider-parameterized, and
-  `theorem10_9_via_intersection` checks the full boundary conclusion using the paper-route
-  Theorem 10.8.  Its abstract theorem still exposes the genuine face-coordinate condition;
+  `AffineColoring.Intersection.exists_fullSimplex_mem_convexHull_colorPoints_of_isVectorHedgehogColoring`
+  checks the full boundary conclusion using the paper-route Theorem 10.8. Its abstract theorem
+  still exposes the genuine face-coordinate condition;
   both the general geometric and Freudenthal applications discharge it for both proof routes.
-- The checked `theorem10_10` proves the full coefficient-elimination and top-simplex argument for
+- The checked
+  `AffineColoring.exists_fullSimplex_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring`
+  proves the full coefficient-elimination and top-simplex argument for
   any chain-simplex family satisfying the exact face-compatibility, inclusion in `D(I)`, and purity
   properties of a triangulation.  `SimplexFamily` alone does not contain these properties, and
   `IsChainSimplex` does not imply them.  For the positive-scale Freudenthal--Scarf complex,
-  `freudenthal_theorem10_10` now proves these properties from the cyclic orders, iterated
+  `IntegerSimplex.exists_fullSimplex_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring`
+  now proves these properties from the cyclic orders, iterated
   coordinate-face extension, and normalized affine realization.  `BeyondSperner.Geometry.Triangulation.Core` now
   constructs the analogous induced family from an arbitrary finite geometric triangulation and
   proves its face coordinates, ambient inclusion, finite facet extension, and automatic purity
@@ -236,7 +257,8 @@ None in the `BeyondSperner` mathematical module tree or in the audited dependenc
   two away from it by a supporting-hyperplane/local-crossing argument.  Thus non-branching is
   derived rather than hidden in either application theorem's assumptions.  The paper-route
   compatibility proof does not assume the explicit coefficient package returned by
-  `theorem10_8_coordinate`: `zero_mem_colorHull_of_affineSolution` reconstructs weights from
+  `AffineColoring.exists_isSolution`:
+  `AffineColoring.zero_mem_colorHull_of_affineSolution` reconstructs weights from
   `IsAffineSolution` convex-hull membership and proves all artificial basis weights vanish.
   Consequently Theorem 10.10 and both concrete application families are independently checked
   through the intersection route as well.
@@ -292,23 +314,35 @@ None in the `BeyondSperner` mathematical module tree or in the audited dependenc
   coefficientwise from the exact parity classification of Freudenthal codimension-one cofaces,
   and the resulting positive-scale induction proves equation (20) and Theorem 4.8.
 
-## Recommended next expansion
+## Current fixed-point scope
 
 The geometric upgrade of Corollary 4.9, the vector-coloring development of Section 7, the
 Scarf--Kakutani development of Section 9, and Theorems 10.8--10.10 at their stated obligation
 layers are now complete.  The independent intersection-number route is complete through
 Theorems 10.8--10.10, including the general-position limit, exact formula-(40) interface,
 provider-parameterized 10.9 boundary extension, and coefficient reconstruction needed by 10.10.
-The affine-simplex Brouwer transfer is now complete: `BeyondSperner.FixedPoint.AffineBrouwer` constructs both directions of
-the barycentric-coordinate homeomorphism, proves their inverse and continuity laws, and conjugates
-the Section 3 fixed-point theorem without invoking a library Brouwer theorem.  This conclusion is
-for the convex hull of an affine basis.  The next genuinely stronger expansion would be Brouwer
-for an arbitrary nonempty compact convex subset of a finite-dimensional real normed space; another
-architectural refinement would reproduce Section 7's printed
-sequential perturbation proof instead of the current stronger oriented-matroid route. The local
-`IsNonbranching` property for the arbitrary finite
-geometric-triangulation family is now complete; the checked Section 4 triangulation remains
-available for a separate general Brouwer route.
+The Brouwer development is complete at three levels.  `BeyondSperner.FixedPoint.ScarfBrouwer`
+proves the standard-simplex theorem, and `BeyondSperner.FixedPoint.AffineBrouwer` constructs both
+directions of the barycentric-coordinate homeomorphism and transports that theorem to the convex
+hull of an arbitrary finite real affine basis.  Finally,
+`BeyondSperner.FixedPoint.CompactConvexBrouwer` contains a compact set in a full affine simplex,
+uses the nonexpansive nearest-point retraction in Euclidean space, and transports the result back
+through a continuous linear equivalence.  Its final theorem applies precisely to a continuous
+self-map of a nonempty compact convex subset of an arbitrary finite-dimensional real normed space.
+It is not an infinite-dimensional Schauder theorem, and no pre-existing general Brouwer or
+Schauder fixed-point theorem is invoked.
+
+The Kakutani development likewise extends from the finite standard simplex to every nonempty
+compact convex subset of an arbitrary finite-dimensional real normed space.
+`BeyondSperner.FixedPoint.CompactConvexKakutani` proves the relative closed-graph formulation and
+then derives the compact-valued upper-hemicontinuous formulation. It reuses the enclosing affine
+simplex, metric projection, and Euclidean transport developed for Brouwer, and does not invoke a
+pre-existing general Kakutani or Schauder theorem.
+
+The current Section 7 implementation uses the stronger oriented-matroid route rather than the
+paper's printed sequential perturbation presentation.  The local `IsNonbranching` property for
+the arbitrary finite geometric-triangulation family is complete, as is the checked Section 4
+triangulation.
 
 The code does not obtain geometric coverage merely by naming a collection of finite vertex sets a
 triangulation: affine independence, downward closure, exact face intersection, and coverage are

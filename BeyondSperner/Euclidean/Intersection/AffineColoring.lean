@@ -89,7 +89,7 @@ generic, full-cardinality image containing that point in its convex hull.
 Both source and image cardinality are recorded: source cardinality permits
 the envelope classification, while image cardinality rules out collapsed
 vertices and is required by formula (40). -/
-theorem theorem10_8_envelope_intersection
+theorem exists_generic_envelope_simplex
     {I V : Type*} [Fintype I] [Fintype V] [Nonempty I]
     [DecidableEq I] [DecidableEq V]
     (D : SimplexFamily I V)
@@ -160,7 +160,7 @@ theorem theorem10_8_envelope_intersection
           φ envelopeChain hsigma
       · exact hmappedM sigma hsigma
     obtain ⟨rho, hrhoComplex, hrhoCard, hqRho⟩ :=
-      lemma10_7_intersection D b q hqGamma hchain φ hφindex
+      exists_envelope_simplex_of_generalPosition D b q hqGamma hchain φ hφindex
         hqMapped hqReference
     have hrhoTop : rho ∈ topSimplices := by
       apply Finset.mem_filter.mpr

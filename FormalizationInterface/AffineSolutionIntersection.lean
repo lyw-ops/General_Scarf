@@ -6,17 +6,18 @@ import BeyondSperner.Euclidean.Intersection.AffineColoring
 
 The mathematical proof remains in the `BeyondSperner` module tree.  This
 file is deliberately outside that tree: it converts the envelope conclusion
-of `EuclideanIntersection.theorem10_8_envelope_intersection` into the public
+of `EuclideanIntersection.exists_generic_envelope_simplex` into the public
 `AffineColoring.IsAffineSolution` interface used by the pre-existing
 oriented-matroid proof.
 
-The theorem below does not invoke `AffineColoring.theorem10_8`; it reaches the
+The theorem below does not invoke `AffineColoring.exists_isAffineSolution`; it reaches the
 same conclusion through Lemma 10.7, general-position density, and the closed
 finite-union argument from the paper.
 -/
 
 namespace BeyondSperner
 namespace AffineColoring
+namespace Intersection
 
 open Classical Set
 
@@ -26,7 +27,7 @@ variable {I V P : Type*} [Fintype I] [Fintype V]
 
 /-- The paper's intersection-number route to exactly the existing
 `IsAffineSolution` conclusion of Theorem 10.8. -/
-theorem theorem10_8_via_intersection
+theorem exists_isAffineSolution
     (D : SimplexFamily I V)
     (b : AffineBasis I ℝ P) (c : D.Vertex → P) (z : P)
     (hz : z ∈ convexHull ℝ (Set.range b))
@@ -50,7 +51,7 @@ theorem theorem10_8_via_intersection
     rfl
   obtain ⟨rho, hrhoComplex, hrhoCard, hrhoImageCard,
       hrhoGeneric, hzRho⟩ :=
-    EuclideanIntersection.theorem10_8_envelope_intersection
+    EuclideanIntersection.exists_generic_envelope_simplex
       D b φ hφindex hchain z hz
   have hrhoTop :
       rho ∈ Envelope.complex D Finset.univ ∧
@@ -77,5 +78,6 @@ theorem theorem10_8_via_intersection
   rw [← himage]
   exact ⟨hrhoImageCard, hzRho, hrhoGeneric⟩
 
+end Intersection
 end AffineColoring
 end BeyondSperner

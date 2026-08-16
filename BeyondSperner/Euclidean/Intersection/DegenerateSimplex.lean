@@ -57,7 +57,7 @@ theorem exists_mem_realization_erase_of_finrank_add_one_lt_card
     (hx : x ∈ realization sigma) :
     ∃ v ∈ sigma, x ∈ realization (sigma.erase v) := by
   obtain ⟨tau, htauSigma, htauCard, hxTau⟩ :=
-    AffineGeometry.lemma10_3
+    AffineGeometry.exists_subset_card_eq_finrank_add_one_mem_convexHull
       (m := Module.finrank ℝ (vectorSpan ℝ (sigma : Set E))) rfl hx
   obtain ⟨v, hvSigma, htauErase⟩ :=
     exists_erase_superset_of_card_lt htauSigma (by simpa [htauCard] using hdim)
@@ -589,7 +589,7 @@ theorem facet_point_parity_of_not_isGeneric
         intro r hr
         rw [pointIntersectionNumber]
         simp only [hiff r hr]
-      _ = 0 := sum_two_distinct_indicators_zmod2 sigma v u hv hu (Ne.symm huv)
+      _ = 0 := sum_two_distinct_indicators_mod_two sigma v u hv hu (Ne.symm huv)
   · apply Finset.sum_eq_zero
     intro v hv
     rw [pointIntersectionNumber_eq_zero_iff]
@@ -1045,7 +1045,7 @@ theorem boundary_point_eq_zero_of_edge_not_subset_affineSpan
 
 omit [FiniteDimensional ℝ E] in
 /-- Lemma 10.4 in the exact codimension-one branch. -/
-theorem lemma10_4_of_finrank_eq_pred
+theorem boundary_intersections_eq_zero_of_finrank_eq_pred
     (n : ℕ) (sigma omega : Finset E) (hn : 0 < n)
     (hsigma : IsMSimplex n sigma) (hng : ¬IsGeneric sigma)
     (hdim : Module.finrank ℝ (vectorSpan ℝ (sigma : Set E)) = n - 1)
@@ -1067,7 +1067,7 @@ theorem lemma10_4_of_finrank_eq_pred
 /-- Lemma 10.4 for the branch where the affine dimension of `sigma` is at
 most `n - 2`.  Both claimed intersection numbers have now been proved, not
 postulated through a compatibility interface. -/
-theorem lemma10_4_of_finrank_add_two_le
+theorem boundary_intersections_eq_zero_of_finrank_add_two_le
     (n : ℕ) (sigma omega : Finset E)
     (hsigma : IsMSimplex n sigma) (hng : ¬IsGeneric sigma)
     (hdim : Module.finrank ℝ (vectorSpan ℝ (sigma : Set E)) + 2 ≤ n)
@@ -1083,7 +1083,7 @@ theorem lemma10_4_of_finrank_add_two_le
 /-- Lemma 10.4 in full.  Unlike the paper's proof, the exact-codimension-one
 case is discharged directly by affine-dependence coefficients; no appeal to
 an unformalized identification of a hyperplane with `ℝ^(n-1)` remains. -/
-theorem lemma10_4
+theorem boundary_intersections_eq_zero_of_not_isGeneric
     (n : ℕ) (sigma omega : Finset E)
     (_hdimAmbient : Module.finrank ℝ E = n)
     (hsigma : IsMSimplex n sigma) (hng : ¬IsGeneric sigma)
@@ -1109,12 +1109,12 @@ theorem lemma10_4
     finrank_vectorSpan_le_pred_of_not_isGeneric n sigma hsigma hng
   by_cases hlow :
       Module.finrank ℝ (vectorSpan ℝ (sigma : Set E)) + 2 ≤ n
-  · exact lemma10_4_of_finrank_add_two_le
+  · exact boundary_intersections_eq_zero_of_finrank_add_two_le
       n sigma omega hsigma hng hlow hgp
   · have heq :
         Module.finrank ℝ (vectorSpan ℝ (sigma : Set E)) = n - 1 := by
       omega
-    exact lemma10_4_of_finrank_eq_pred
+    exact boundary_intersections_eq_zero_of_finrank_eq_pred
       n sigma omega hn hsigma hng heq hgp
 
 end EuclideanIntersection

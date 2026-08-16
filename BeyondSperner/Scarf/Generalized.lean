@@ -86,7 +86,7 @@ theorem generalizedScarf
   let c' : MatroidColoring.Coloring orders.associatedFamily F :=
     fun x ↦ c x.1
   obtain ⟨C, τ, hτ, hC, hcard, hgood⟩ :=
-    MatroidColoring.theorem8_5 orders.associatedFamily F
+    MatroidColoring.exists_isSolution orders.associatedFamily F
       orders.associatedFamily_isChainSimplex c'
   have hcell : orders.IsCell τ C := by
     have hassoc : orders.IsAssociatedSimplex C τ :=

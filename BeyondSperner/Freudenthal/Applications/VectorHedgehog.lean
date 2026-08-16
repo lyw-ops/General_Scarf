@@ -20,7 +20,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- The full vector-hedgehog theorem for the concrete positive-scale
 Freudenthal--Scarf triangulation. -/
-theorem freudenthal_theorem10_9
+theorem exists_fullSimplex_mem_convexHull_colorPoints_of_isVectorHedgehogColoring
     {N n : ℕ} (hN : 0 < N)
     (b : AffineBasis (Fin (n + 1)) ℝ E)
     (c : ((pointOrders N n).associatedFamily).Vertex → E)
@@ -45,7 +45,7 @@ theorem freudenthal_theorem10_9
     intro C tau htau v hv i hi
     exact coord_affinePointPosition_eq_zero_of_mem_associatedComplex
       hN b htau hv (Finset.mem_sdiff.mp hi).2
-  exact AffineColoring.theorem10_9 D b p c
+  exact AffineColoring.exists_fullSimplex_mem_convexHull_colorPoints_of_isVectorHedgehogColoring D b p c
     (pointOrders N n).associatedFamily_isChainSimplex
     hface hhedgehog z hz
 

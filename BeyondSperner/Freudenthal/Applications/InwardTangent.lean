@@ -5,7 +5,7 @@ import BeyondSperner.Freudenthal.Boundary
 # Theorem 10.10 on the concrete Freudenthal--Scarf triangulation
 
 This file discharges the abstract face, ambient-inclusion, and purity
-obligations of `AffineColoring.theorem10_10` for the positive-scale integer
+obligations of `AffineColoring.exists_fullSimplex_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring` for the positive-scale integer
 simplex.  Integer vertices are realized in an arbitrary reference simplex by
 their normalized coordinates.  Lemma 4.7 supplies the boundary-face
 condition, the iterated coordinate-face theorem supplies inclusion in the
@@ -107,7 +107,7 @@ theorem coord_affinePointPosition_eq_zero_of_mem_associatedComplex
 triangulation.  Unlike the abstract theorem, no face-compatibility,
 ambient-inclusion, or purity hypothesis remains: all three are derived from
 the concrete cyclic orders and integer realization. -/
-theorem freudenthal_theorem10_10
+theorem exists_fullSimplex_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring
     {N n : ℕ} (hN : 0 < N)
     (b : AffineBasis (Fin (n + 1)) ℝ P)
     (hb : AffineColoring.IsCenteredAffineBasis b)
@@ -147,7 +147,7 @@ theorem freudenthal_theorem10_10
     simpa using associatedComplex_isPureOfCardinality_of_pos
       (N := N) (n := n) hN
   obtain ⟨sigma, hsigma, hcard, hzero⟩ :=
-    AffineColoring.theorem10_10 D b hb p c
+    AffineColoring.exists_fullSimplex_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring D b hb p c
       (pointOrders N n).associatedFamily_isChainSimplex
       hface hinward hAmbient hPure
   refine ⟨sigma, hsigma, ?_, hzero⟩

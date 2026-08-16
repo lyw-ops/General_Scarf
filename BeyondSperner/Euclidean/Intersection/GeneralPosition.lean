@@ -435,7 +435,7 @@ theorem pointChainIntersection_singleton_eq_zero_of_forall_not_mem
 necessary.  In the zero vector space there is a nonzero zero-chain, every
 universal premise over one-simplices is vacuous, and its point-intersection
 number at the unique point is one. -/
-theorem lemma10_2_requires_positive_dimension :
+theorem exists_pointChainIntersection_ne_zero_of_finrank_zero :
     ∃ (c : Chain (Fin 0 → ℝ)) (z : Fin 0 → ℝ),
       IsMChain 0 c ∧ PointInGeneralPositionWithChain c z ∧
         (∀ omega : Finset (Fin 0 → ℝ),
@@ -466,7 +466,7 @@ omit [FiniteDimensional ℝ E] in
 /-- Lemma 10.2.  The hypothesis `0 < n` is necessary: in dimension zero
 there are no one-simplices, so the universal premise would otherwise be
 vacuous. -/
-theorem lemma10_2
+theorem pointChainIntersection_eq_zero_of_boundary_intersection_eq_zero
     (n : ℕ) (c : Chain E)
     (hdim : Module.finrank ℝ E = n) (hn : 0 < n)
     (hc : IsMChain n c)

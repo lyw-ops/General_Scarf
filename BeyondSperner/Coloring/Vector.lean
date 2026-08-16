@@ -585,14 +585,14 @@ def IsSolution (D : SimplexFamily I V) (c : Coloring F D)
 general oriented-matroid coloring theorem with the realizability
 compatibility theorems above; the last step reconstructs an actual linear
 basis and an actual nonnegative coefficient vector. -/
-theorem theorem7_2
+theorem exists_isSolution
     (hbounded : Bornology.IsBounded F.nonnegativeSolutions)
     (D : SimplexFamily I V) (hchain : D.IsChainSimplex)
     (c : Coloring F D) :
     ∃ C : Finset I, ∃ τ : Finset V, F.IsSolution D c C τ := by
   let MF : MatroidColoring.Framework I M := F.toMatroidFramework hbounded
   obtain ⟨C, τ, hτ, hC, hcard, hgood⟩ :=
-    MatroidColoring.theorem8_5 D MF hchain c
+    MatroidColoring.exists_isSolution D MF hchain c
   let S : Finset M := F.completedImage D c C τ hτ
   have hgoodS : MF.matroid.IsGoodBasis F.distinguished (S : Set M) := by
     simpa [MF, S, toMatroidFramework,

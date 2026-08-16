@@ -645,7 +645,7 @@ omit [Fintype I] [Nonempty X] in private theorem card_boundary_cells_eq_card_exc
   rw [← himage, Finset.card_image_of_injOn hinj]
 
 /-- Theorem 2.6, expressed directly as the sum of the two finite incidence counts. -/
-private theorem mainCombinatorialLemma (F : IndexedLinearOrders I X)
+private theorem card_cells_containing_add_card_boundary_cells_eq_two (F : IndexedLinearOrders I X)
     {σ : Finset X} (hσ : σ.Nonempty) {C : Finset I} (hface : F.IsFace σ C) :
     (Finset.univ.filter fun τ ↦ F.IsCell τ C ∧ σ ⊆ τ).card +
       ((SimplexFamily.boundaryIndices C).filter fun B ↦ F.IsCell σ B).card = 2 := by
@@ -948,7 +948,7 @@ theorem associatedFamily_isPseudoSimplex (F : IndexedLinearOrders I X) :
   · have hface := isFace_of_relevant_nonempty F hσ hrel
     rw [cofaceCount_associated_eq_card_cells F hface.1.1,
       boundaryMembershipCount_associated_eq_card_cells F hσ hface.2]
-    exact mainCombinatorialLemma F hσ hface
+    exact card_cells_containing_add_card_boundary_cells_eq_two F hσ hface
   · have hσempty : σ = ∅ := Finset.not_nonempty_iff_eq_empty.mp hσ
     subst σ
     have hrelcard : (∅ : Finset X).card + 1 = C.card := hrel.1

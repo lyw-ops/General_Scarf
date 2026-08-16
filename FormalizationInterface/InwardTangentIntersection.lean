@@ -1,5 +1,5 @@
 import BeyondSperner.Coloring.InwardTangent
-import FormalizationInterface.Theorem10_8Intersection
+import FormalizationInterface.AffineSolutionIntersection
 
 /-!
 # Theorem 10.10 through the intersection proof of Theorem 10.8
@@ -15,6 +15,7 @@ Theorem 10.8.
 
 namespace BeyondSperner
 namespace AffineColoring
+namespace Intersection
 
 open Classical Set
 
@@ -33,7 +34,7 @@ theorem zero_mem_referenceSimplex_of_centered
   exact inv_nonneg.mpr (by positivity)
 
 /-- The core of Theorem 10.10 using the paper-route proof of Theorem 10.8. -/
-theorem theorem10_10_core_via_intersection
+theorem exists_face_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring
     (D : SimplexFamily I V)
     (b : AffineBasis I ℝ E) (hb : IsCenteredAffineBasis b)
     (p c : D.Vertex → E)
@@ -46,12 +47,12 @@ theorem theorem10_10_core_via_intersection
       C.Nonempty ∧ tau.card = C.card ∧
         (0 : E) ∈ convexHull ℝ
           (affineSimplexColorPoints D c C tau htau : Set E) := by
-  apply theorem10_10_core_of_affineSolution D b hb p c hface hinward
-  exact theorem10_8_via_intersection D b c 0
+  apply exists_face_zero_mem_convexHull_colorPoints_of_isAffineSolution D b hb p c hface hinward
+  exact exists_isAffineSolution D b c 0
     (zero_mem_referenceSimplex_of_centered b hb) hchain
 
 /-- The full Theorem 10.10 through the paper-route proof of Theorem 10.8. -/
-theorem theorem10_10_via_intersection
+theorem exists_fullSimplex_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring
     (D : SimplexFamily I V)
     (b : AffineBasis I ℝ E) (hb : IsCenteredAffineBasis b)
     (p c : D.Vertex → E)
@@ -67,9 +68,10 @@ theorem theorem10_10_via_intersection
       sigma.card = Fintype.card I ∧
         (0 : E) ∈ convexHull ℝ
           (affineSimplexColorPoints D c Finset.univ sigma hsigma : Set E) := by
-  exact theorem10_10_of_core D c
-    (theorem10_10_core_via_intersection D b hb p c hchain hface hinward)
+  exact exists_fullSimplex_zero_mem_convexHull_colorPoints_of_face D c
+    (exists_face_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring D b hb p c hchain hface hinward)
     hAmbient hPure
 
+end Intersection
 end AffineColoring
 end BeyondSperner

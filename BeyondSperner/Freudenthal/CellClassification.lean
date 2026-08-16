@@ -669,7 +669,7 @@ theorem cellCut_newCoord_decreases (hn : 0 < n)
 vertices.  The cut vertex is the next minimum, the next ordered enumeration
 is the corresponding cyclic rotation, and the two distinguished coordinates
 change by exactly one in opposite directions. -/
-theorem lemma4_4 (hn : 0 < n)
+theorem exists_cell_cut_rotation_and_coordinate_steps (hn : 0 < n)
     (hcell : (pointOrders N n).IsCell σ Finset.univ)
     (i : Fin (n + 1)) :
     ∃ q : Fin n,
@@ -817,7 +817,7 @@ theorem cellOrderVertex_succ_eq_cyclicStep (hn : 0 < n)
     have hv := congrArg Fin.val h
     simp at hv
   obtain ⟨q, hq, hqmin, _, hinc, hdec⟩ :=
-    lemma4_4 hn hcell p.castSucc
+    exists_cell_cut_rotation_and_coordinate_steps hn hcell p.castSucc
   let x : Point N n := cellOrderVertex hcell p.castSucc q.castSucc
   let y : Point N n := cellOrderVertex hcell p.castSucc q.succ
   have hyTarget : y = cellOrderVertex hcell 0 k.succ := by
@@ -1025,7 +1025,7 @@ theorem fullCell_image_eq_stepSimplex (hn : 0 < n)
 /-- The positive-dimensional part of Theorem 4.5 in the paper's existential
 form.  The permutation is on the nonzero indices; adjoining the fixed index
 zero recovers `cellIndexPermutation hcell 0`. -/
-theorem theorem4_5_of_pos (hn : 0 < n)
+theorem exists_image_pointCoords_eq_stepSimplex_of_pos (hn : 0 < n)
     (hcell : (pointOrders N n).IsCell σ Finset.univ) :
     ∃ a : Point N n, a ∈ σ ∧
       ∃ ω : Equiv.Perm (Fin n),
@@ -1037,7 +1037,7 @@ theorem theorem4_5_of_pos (hn : 0 < n)
 
 /-- Theorem 4.5 in every dimension, including the trivial but mathematically
 necessary zero-dimensional case. -/
-theorem theorem4_5
+theorem exists_image_pointCoords_eq_stepSimplex
     (hcell : (pointOrders N n).IsCell σ Finset.univ) :
     ∃ a : Point N n, a ∈ σ ∧
       ∃ ω : Equiv.Perm (Fin n),
@@ -1050,7 +1050,7 @@ theorem theorem4_5
     refine ⟨a, Finset.mem_singleton_self a, Equiv.refl (Fin 0), ?_⟩
     ext x
     simp [stepSimplex, permutationList, stepSequence]
-  · exact theorem4_5_of_pos (Nat.pos_of_ne_zero hn) hcell
+  · exact exists_image_pointCoords_eq_stepSimplex_of_pos (Nat.pos_of_ne_zero hn) hcell
 
 end IntegerSimplex
 

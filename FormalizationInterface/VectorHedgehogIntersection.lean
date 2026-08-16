@@ -1,18 +1,19 @@
 import BeyondSperner.Coloring.VectorHedgehog
-import FormalizationInterface.Theorem10_8Intersection
+import FormalizationInterface.AffineSolutionIntersection
 
 /-!
 # Theorem 10.9 through the intersection proof of Theorem 10.8
 
 This compatibility module is outside the mathematical source tree.  It
 instantiates the provider-parameterized proof in `VectorHedgehog` with
-`theorem10_8_via_intersection`, and therefore threads the paper's Section 10
+`exists_isAffineSolution`, and therefore threads the paper's Section 10
 intersection route through both the strict-interior and boundary cases of
 Theorem 10.9.
 -/
 
 namespace BeyondSperner
 namespace AffineColoring
+namespace Intersection
 
 open Classical Set
 
@@ -21,7 +22,7 @@ variable {V E : Type*} [Fintype V] [DecidableEq V]
 
 /-- The strict-interior part of Theorem 10.9 using the paper-route proof of
 Theorem 10.8. -/
-theorem theorem10_9_interior_via_intersection {n : ℕ}
+theorem exists_fullSimplex_mem_convexHull_colorPoints_of_isStrictInteriorPoint {n : ℕ}
     (D : SimplexFamily (Fin (n + 1)) V)
     (b : AffineBasis (Fin (n + 1)) ℝ E)
     (p c : D.Vertex → E)
@@ -36,13 +37,13 @@ theorem theorem10_9_interior_via_intersection {n : ℕ}
       sigma.card = n + 1 ∧
         z ∈ convexHull ℝ
           (affineSimplexColorPoints D c Finset.univ sigma hsigma : Set E) := by
-  exact theorem10_9_interior_of_solution_provider D b p c hface hhedgehog
-    (fun b' q hq ↦ theorem10_8_via_intersection D b' c q hq hchain)
+  exact exists_fullSimplex_mem_convexHull_colorPoints_of_isStrictInteriorPoint_of_solution_provider D b p c hface hhedgehog
+    (fun b' q hq ↦ exists_isAffineSolution D b' c q hq hchain)
     z hz hzInterior
 
 /-- The full Theorem 10.9, including boundary targets, with Theorem 10.8
 supplied by the paper's intersection-number/general-position proof. -/
-theorem theorem10_9_via_intersection {n : ℕ}
+theorem exists_fullSimplex_mem_convexHull_colorPoints_of_isVectorHedgehogColoring {n : ℕ}
     (D : SimplexFamily (Fin (n + 1)) V)
     (b : AffineBasis (Fin (n + 1)) ℝ E)
     (p c : D.Vertex → E)
@@ -56,10 +57,11 @@ theorem theorem10_9_via_intersection {n : ℕ}
       sigma.card = n + 1 ∧
         z ∈ convexHull ℝ
           (affineSimplexColorPoints D c Finset.univ sigma hsigma : Set E) := by
-  exact theorem10_9_of_interior_provider D b c
+  exact exists_fullSimplex_mem_convexHull_colorPoints_of_interior_cover D b c
     (fun q hq hqInterior ↦
-      theorem10_9_interior_via_intersection D b p c hchain hface hhedgehog
+      exists_fullSimplex_mem_convexHull_colorPoints_of_isStrictInteriorPoint D b p c hchain hface hhedgehog
         q hq hqInterior) z hz
 
+end Intersection
 end AffineColoring
 end BeyondSperner

@@ -125,7 +125,7 @@ The boundary hypothesis is exactly the centered-coordinate version of the
 inward-tangent condition for vertices of a simplex in `D(C)`.  The conclusion
 contains no formal reference vertices: the standard barycenter is already in
 the convex hull of the colors on `tau`. -/
-theorem theorem10_10_coordinate_core
+theorem exists_face_barycentricCenter_mem_convexHull_colorPoints
     (c : D.Vertex → I → ℝ)
     (hc : ∀ v, HasUnitSum (c v))
     (hchain : D.IsChainSimplex)
@@ -140,7 +140,7 @@ theorem theorem10_10_coordinate_core
   let z : I → ℝ := barycentricCenter (I := I)
   have hz : IsStandardSimplexPoint z :=
     barycentricCenter_isStandardSimplexPoint (I := I)
-  obtain ⟨C, tau, hsol⟩ := theorem10_8_coordinate D c z hc hz hchain
+  obtain ⟨C, tau, hsol⟩ := exists_isSolution D c z hc hz hchain
   rcases hsol with ⟨htau, hC, htauCard, hdata⟩
   dsimp only at hdata
   rcases hdata with
@@ -438,7 +438,7 @@ theorem centeredBoundary_of_inward
 omit [Fintype V] in
 /-- Theorem 10.10 before top-simplex extension, supplied with any proof of
 the public Theorem 10.8 `IsAffineSolution` conclusion at the origin. -/
-theorem theorem10_10_core_of_affineSolution
+theorem exists_face_zero_mem_convexHull_colorPoints_of_isAffineSolution
     (b : AffineBasis I ℝ P) (hb : IsCenteredAffineBasis b)
     (p c : D.Vertex → P)
     (hface : ∀ (C : Finset I) (tau : Finset V)
@@ -460,7 +460,7 @@ theorem theorem10_10_core_of_affineSolution
 /-- Theorem 10.10 before extending `tau` to a top-dimensional simplex.
 The face-compatibility hypothesis says precisely that a vertex of `D(C)`
 lies on every reference face indexed outside `C`. -/
-theorem theorem10_10_core
+theorem exists_face_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring
     (b : AffineBasis I ℝ P) (hb : IsCenteredAffineBasis b)
     (p c : D.Vertex → P)
     (hchain : D.IsChainSimplex)
@@ -482,7 +482,7 @@ theorem theorem10_10_core
         0 ≤ cc v i - barycentricCenter (I := I) i :=
     centeredBoundary_of_inward D b hb p c hface hinward
   obtain ⟨C, tau, htau, hC, htauCard, hz⟩ :=
-    theorem10_10_coordinate_core D cc hcc hchain hboundary
+    exists_face_barycentricCenter_mem_convexHull_colorPoints D cc hcc hchain hboundary
   let S : Finset P := affineSimplexColorPoints D c C tau htau
   let Q : Finset (I → ℝ) := simplexColorPoints D cc C tau htau
   have himage : S.image (coordinateMap b) = Q :=
@@ -521,7 +521,7 @@ omit [Fintype V] [DecidableEq I] [Nonempty I] in
 /-- Extend the lower-dimensional color-hull conclusion of Theorem 10.10 to
 a top simplex.  This step depends only on ambient inclusion and purity, not
 on how the core witness was obtained. -/
-theorem theorem10_10_of_core
+theorem exists_fullSimplex_zero_mem_convexHull_colorPoints_of_face
     (c : D.Vertex → P)
     (hcore : ∃ C : Finset I, ∃ tau : Finset V,
       ∃ htau : tau ∈ D.complex C,
@@ -546,7 +546,7 @@ theorem theorem10_10_of_core
 the ambient complex and whose ambient complex is pure of cardinality `|I|`.
 These two hypotheses are genuine triangulation obligations; they are not
 consequences of `SimplexFamily` or `IsChainSimplex` alone. -/
-theorem theorem10_10
+theorem exists_fullSimplex_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring
     (b : AffineBasis I ℝ P) (hb : IsCenteredAffineBasis b)
     (p c : D.Vertex → P)
     (hchain : D.IsChainSimplex)
@@ -561,8 +561,8 @@ theorem theorem10_10
       sigma.card = Fintype.card I ∧
         (0 : P) ∈ convexHull ℝ
           (affineSimplexColorPoints D c Finset.univ sigma hsigma : Set P) := by
-  exact theorem10_10_of_core D c
-    (theorem10_10_core D b hb p c hchain hface hinward) hAmbient hPure
+  exact exists_fullSimplex_zero_mem_convexHull_colorPoints_of_face D c
+    (exists_face_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring D b hb p c hchain hface hinward) hAmbient hPure
 
 end AffineVersion
 end AffineColoring

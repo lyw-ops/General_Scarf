@@ -156,7 +156,7 @@ theorem rawData_sum_vector_eq_one [Fintype I] [Fintype X]
 
 /-- Lemma 9.1, pointwise part: every coefficient of every nonnegative
 solution of equation (30) is at most one. -/
-theorem lemma9_1_coefficient_le_one [Fintype I] [Fintype X]
+theorem rawData_coefficient_le_one [Fintype I] [Fintype X]
     [DecidableEq I] [Nontrivial I]
     (p f : X → I → ℝ)
     (hp : ∀ x, p x ∈
@@ -173,7 +173,7 @@ theorem lemma9_1_coefficient_le_one [Fintype I] [Fintype X]
       (rawData_sum_vector_eq_one p f hp hf hnoFixed) ha m
 
 /-- Lemma 9.1, boundedness part. -/
-theorem lemma9_1_isBounded [Fintype I] [Fintype X]
+theorem rawData_nonnegativeSolutions_isBounded [Fintype I] [Fintype X]
     [DecidableEq I] [Nontrivial I]
     (p f : X → I → ℝ)
     (hp : ∀ x, p x ∈
@@ -202,7 +202,7 @@ theorem exists_scarf_solution_of_noFixed
     ∃ S : Finset (X ⊕ I),
       (rawData p f hnoFixed).IsSolution orders S :=
   (rawData p f hnoFixed).scarf orders
-    (lemma9_1_isBounded p f hp hf hnoFixed)
+    (rawData_nonnegativeSolutions_isBounded p f hp hf hnoFixed)
 
 /-- The literal vector set in formula (34). -/
 noncomputable def cellVectorImage [Fintype I] [Fintype X]
@@ -494,7 +494,7 @@ theorem exists_cellSolution_of_noFixed
   let D := orders.associatedFamily
   let c := cellColoring orders p f hnoFixed
   obtain ⟨C, τ, hτ, hC, hcard, B, hB, q, hq, hcomb⟩ :=
-    F.theorem7_2 (lemma9_1_isBounded p f hp hf hnoFixed)
+    F.exists_isSolution (rawData_nonnegativeSolutions_isBounded p f hp hf hnoFixed)
       D orders.associatedFamily_isChainSimplex c
   have hcell : orders.IsCell τ C := by
     have hassoc : orders.IsAssociatedSimplex C τ :=
@@ -764,7 +764,7 @@ end Sample
 of the selected maps already has an exact fixed sample point, or one fixed
 index set `C` supports formula-(34) cell solutions for infinitely many
 sample indices. -/
-theorem lemma9_2
+theorem exists_fixed_sample_or_infinite_cellSolution_fiber
     [Fintype I] [DecidableEq I] [LinearOrder I]
     (samples : ℕ → Sample I) :
     (∃ k, (samples k).HasFixed) ∨
@@ -1094,7 +1094,7 @@ theorem scarf_kakutani_fixedPoint
     ∃ z ∈ (ScarfBrouwer.standardSimplex : Set (I → ℝ)),
       z ∈ K.value z := by
   let samples : ℕ → Sample I := approximationSample K
-  rcases lemma9_2 samples with hfixed | hcells
+  rcases exists_fixed_sample_or_infinite_cellSolution_fiber samples with hfixed | hcells
   · obtain ⟨n, x, hx⟩ := hfixed
     refine ⟨(samples n).p x, (samples n).p_mem x, ?_⟩
     have hvalue : (samples n).f x ∈ K.value ((samples n).p x) := by

@@ -71,7 +71,7 @@ variable [Fintype V] [Nonempty I]
 complex.  This version is stronger than the paper's stated lemma because it
 requires no general-position assumption.  Its proof uses Theorem 10.8 rather
 than the paper's intersection-number route. -/
-theorem lemma10_7_envelope_of_theorem10_8
+theorem exists_envelope_simplex
     (D : SimplexFamily I V)
     (b : AffineBasis I ℝ P) (c : D.Vertex → P) (z : P)
     (hz : z ∈ convexHull ℝ (Set.range b))
@@ -83,7 +83,7 @@ theorem lemma10_7_envelope_of_theorem10_8
       rho ∈ Envelope.complex D Finset.univ ∧
       rho.card = Fintype.card I ∧
       z ∈ convexHull ℝ (rho.image φ : Set P) := by
-  obtain ⟨C, tau, hsol⟩ := theorem10_8 D b c z hz hchain
+  obtain ⟨C, tau, hsol⟩ := exists_isAffineSolution D b c z hz hchain
   rcases hsol with ⟨htau, hC, htauCard, hdata⟩
   dsimp only at hdata
   rcases hdata with ⟨_hPointCard, hzCompleted, _hAffineIndependent⟩

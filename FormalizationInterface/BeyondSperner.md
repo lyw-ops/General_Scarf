@@ -5,10 +5,9 @@ to Ivanov's generalized Scarf theorem.  It is meant to be readable both by a hum
 proof-planning or autoformalization tools such as Rethlas and Archon.
 
 The current milestone combines **statement correctness** with kernel-checked proofs along the main
-dependency spine.  A `sorry` marks an open proof obligation; it is not part of the mathematical
-interface.
+dependency spine. Published declarations may not contain `sorry`, `admit`, or declared axioms.
 
-Current proof coverage, including transitive `sorryAx` warnings, is tracked separately in
+Current proof coverage and transitive axiom audits are tracked separately in
 [`STATUS.md`](STATUS.md).
 
 ## Module organization
@@ -26,7 +25,8 @@ Current proof coverage, including transitive `sorryAx` warnings, is tracked sepa
 - `BeyondSperner.Geometry.Triangulation` contains the abstract finite geometric-triangulation
   bridge, purity, non-branching, and applications.
 - `FormalizationInterface` remains outside the mathematical tree as the paper-route adapter and
-  audit layer; its theorem-numbered filenames are intentional.
+  audit layer; its modules and declarations are named by mathematical responsibility, while paper
+  theorem numbers remain in documentation comments.
 
 ## Dependency graph
 
@@ -53,10 +53,11 @@ Simplicial.ChainSimplex ── Orders.LinearOrders
                                    └── Scarf.Generalized
 
 OrientedMatroid.Realizable ── Coloring.Vector ── Scarf.Vector ── FixedPoint.Kakutani
+                                                                    └── FixedPoint.CompactConvexKakutani
                                       │                 │
                                       └── Theorem 7.2   └── Lemma 7.3 / Scarf.Generalized
 
-Scarf.Classical ── FixedPoint.ScarfBrouwer ── FixedPoint.AffineBrouwer
+Scarf.Classical ── FixedPoint.ScarfBrouwer ── FixedPoint.AffineBrouwer ── FixedPoint.CompactConvexBrouwer
 
 Euclidean.Chains ── Euclidean.Intersection.Basic
                           └── Euclidean.Intersection.GeneralPosition
@@ -140,6 +141,22 @@ The `BeyondSperner` development is self-contained apart from its mathlib depende
     proof first returns that exact fixed point or proceeds in the no-fixed branch.  Lemma 9.2 is
     correspondingly stated as an exact-fixed-stage alternative or one fixed `C` occurring
     infinitely often; this is the total statement justified for arbitrary selected samples.
+16. **The compact-convex Brouwer extension uses Euclidean metric projection only.** A compact set
+    is placed inside a full affine simplex.  For a nonempty compact convex set in a real inner
+    product space, the chosen nearest point satisfies the variational inequality and defines a
+    nonexpansive retraction.  The general finite-dimensional real normed-space theorem first moves
+    the set and self-map through a continuous linear equivalence to Euclidean space and then moves
+    the fixed point back; it does not assume that nearest-point projection is nonexpansive for an
+    arbitrary norm.  The proof uses Mathlib's finite-dimensional topology, compactness, affine
+    bases, and Hilbert-space projection results, but no pre-existing general Brouwer or Schauder
+    fixed-point theorem.
+17. **The compact-convex Kakutani extension preserves the relative closed-graph interface.** Its
+    correspondence has type `K → Set E`, so convexity is stated in the ambient vector space while
+    the graph is closed in `K × E`. The inner-product-space proof lifts the correspondence to an
+    enclosing standard simplex through metric projection and affine coordinates; the general
+    finite-dimensional normed-space result is transported through a continuous linear
+    equivalence with Euclidean space. The upper-hemicontinuous version derives the required closed
+    graph from compact values rather than assuming a stronger ambient-domain graph condition.
 
 ## Article-to-Lean statement map
 
@@ -168,36 +185,39 @@ The `BeyondSperner` development is self-contained apart from its mathlib depende
 | nondegenerate framework | `MatroidColoring.Framework`, `Framework.IsNondegenerate` | `BeyondSperner.Coloring.Matroid.Nondegenerate` |
 | Lemmas 6.1--6.3 | `not_memConvexHull_of_card_eq_of_not_isBasis`, `existsUnique_goodBasis_replace`, `card_goodReplacements_eq_zero_or_two` | `BeyondSperner.Coloring.Matroid.Nondegenerate` |
 | Lemma 6.4 | `boundary_goodBasis_parity` | `BeyondSperner.Coloring.Matroid.Nondegenerate` |
-| Theorem 6.5, including parity | `MatroidColoring.theorem6_5` | `BeyondSperner.Coloring.Matroid.Nondegenerate` |
+| Theorem 6.5, including parity | `MatroidColoring.solutionPairs_nonempty_and_odd_card` | `BeyondSperner.Coloring.Matroid.Nondegenerate` |
 | Lemma 7.3 | `IndexedLinearOrders.dominant_extendCell_iff` | `BeyondSperner.Orders.LinearOrders` |
 | Lemma 7.1 | `VectorColoring.Framework.isAcyclic_of_isBounded_nonnegativeSolutions` | `BeyondSperner.Coloring.Vector` |
 | realizable vector oriented matroid | `RealizableOrientedMatroid.data` | `BeyondSperner.OrientedMatroid.Realizable` |
 | vector/oriented compatibility | `isIndependent_iff_linearIndependent`, `isAcyclic_iff_no_nonnegative_dependence`, `memConvexHull_iff_exists_nonnegative_combination` | `BeyondSperner.OrientedMatroid.Realizable` |
-| Theorem 7.2 | `VectorColoring.Framework.theorem7_2` | `BeyondSperner.Coloring.Vector` |
+| Theorem 7.2 | `VectorColoring.Framework.exists_isSolution` | `BeyondSperner.Coloring.Vector` |
 | vector Scarf theorem (packaged framework) | `VectorScarf.vectorScarf` | `BeyondSperner.Scarf.Vector` |
 | vector Scarf theorem (direct raw `φ`) | `VectorScarf.RawData.scarf` | `BeyondSperner.Scarf.Vector` |
-| Lemma 9.1 | `KakutaniScarf.lemma9_1_coefficient_le_one`, `lemma9_1_isBounded` | `BeyondSperner.FixedPoint.Kakutani` |
+| Lemma 9.1 | `KakutaniScarf.rawData_coefficient_le_one`, `rawData_nonnegativeSolutions_isBounded` | `BeyondSperner.FixedPoint.Kakutani` |
 | formula (34) and equation (35) | `KakutaniScarf.IsCellSolution`, `IsCellSolution.exists_indexed_coefficients_bounded` | `BeyondSperner.FixedPoint.Kakutani` |
-| Lemma 9.2, with exact-fixed branch explicit | `KakutaniScarf.lemma9_2` | `BeyondSperner.FixedPoint.Kakutani` |
+| Lemma 9.2, with exact-fixed branch explicit | `KakutaniScarf.exists_fixed_sample_or_infinite_cellSolution_fiber` | `BeyondSperner.FixedPoint.Kakutani` |
 | limiting coefficient argument after (36) | `KakutaniScarf.convex_combination_of_limit_equation`, `mem_of_limit_equation` | `BeyondSperner.FixedPoint.Kakutani` |
 | Kakutani fixed-point theorem on a finite simplex | `KakutaniScarf.scarf_kakutani_fixedPoint`, `kakutani_fixedPoint` | `BeyondSperner.FixedPoint.Kakutani` |
+| closed-graph Kakutani theorem on finite-dimensional real inner-product spaces | `KakutaniScarf.scarf_kakutani_fixedPoint_compactConvex_inner` | `BeyondSperner.FixedPoint.CompactConvexKakutani` |
+| closed-graph Kakutani theorem on finite-dimensional real normed spaces | `KakutaniScarf.scarf_kakutani_fixedPoint_compactConvex` | `BeyondSperner.FixedPoint.CompactConvexKakutani` |
+| compact-valued upper-hemicontinuous Kakutani theorem | `KakutaniScarf.kakutani_fixedPoint_compactConvex_of_upperHemicontinuous` | `BeyondSperner.FixedPoint.CompactConvexKakutani` |
 | Section 10 chain identities | `SimplexFamily.boundary_boundary`, `normalizedMapChainHom_boundary` | `BeyondSperner.Euclidean.Chains` |
-| Lemma 10.1 | `EuclideanIntersection.facet_endpoint_parity_pair`, `EuclideanIntersection.lemma10_1` | `BeyondSperner.Euclidean.Intersection.Basic` |
-| Lemma 10.2 (`0 < n`) and its zero-dimensional counterexample | `EuclideanIntersection.exists_generalPosition_endpoint`, `EuclideanIntersection.lemma10_2_requires_positive_dimension`, `EuclideanIntersection.lemma10_2` | `BeyondSperner.Euclidean.Intersection.GeneralPosition` |
-| Lemma 10.4, including the exact-codimension-one facet parity | `EuclideanIntersection.exists_exactly_two_facets_of_not_isGeneric`, `EuclideanIntersection.facet_point_parity_of_not_isGeneric`, `EuclideanIntersection.lemma10_4` | `BeyondSperner.Euclidean.Intersection.DegenerateSimplex` |
-| Theorem 10.5 and Corollary 10.6 | `EuclideanIntersection.chain_stokes_of_pairwise`, `EuclideanIntersection.theorem10_5`, `EuclideanIntersection.corollary10_6` | `BeyondSperner.Euclidean.Intersection.Stokes` |
-| Lemma 10.7, forward intersection-number proof | `EuclideanIntersection.lemma10_7_intersection` | `BeyondSperner.Euclidean.Intersection.EnvelopeCoverage` |
-| Theorem 10.8, paper's general-position/limit route in envelope form | `EuclideanIntersection.theorem10_8_envelope_intersection` | `BeyondSperner.Euclidean.Intersection.AffineColoring` |
-| Theorem 10.8, paper route converted to formula (40) | `AffineColoring.theorem10_8_via_intersection` | `FormalizationInterface.Theorem10_8Intersection` |
-| Theorem 10.9, provider-parameterized interior and boundary layers | `AffineColoring.theorem10_9_interior_of_solution_provider`, `theorem10_9_of_interior_provider` | `BeyondSperner.Coloring.VectorHedgehog` |
-| Theorem 10.9 through the paper route | `AffineColoring.theorem10_9_via_intersection` | `FormalizationInterface.Theorem10_9Intersection` |
-| Lemma 10.3 | `AffineGeometry.lemma10_3_atMost`, `AffineGeometry.lemma10_3` | `BeyondSperner.Euclidean.AffineGeometry` |
-| formula (40) and Theorem 10.8, barycentric-coordinate form | `AffineColoring.completedPoints_eq_formula`, `theorem10_8_coordinate` | `BeyondSperner.Coloring.Affine` |
-| Theorem 10.8, arbitrary affine basis | `AffineColoring.theorem10_8` | `BeyondSperner.Coloring.Affine` |
-| Lemma 10.7 envelope-covering conclusion, derived from Theorem 10.8 without general position | `AffineColoring.lemma10_7_envelope_of_theorem10_8` | `BeyondSperner.Coloring.AffineEnvelope` |
-| Theorem 10.9, strict-interior cyclic half-space argument | `AffineColoring.exists_mem_finRotate_not_mem_of_nonempty_ne_univ`, `theorem10_9_interior` | `BeyondSperner.Coloring.VectorHedgehog` |
-| Theorem 10.9, finite-closed-union boundary extension | `AffineColoring.isClosed_fullSimplexColorRegion`, `theorem10_9` | `BeyondSperner.Coloring.VectorHedgehog` |
-| Theorem 10.9 on the concrete Freudenthal--Scarf triangulation (`0 < N`) | `IntegerSimplex.freudenthal_theorem10_9` | `BeyondSperner.Freudenthal.Applications.VectorHedgehog` |
+| Lemma 10.1 | `EuclideanIntersection.facet_endpoint_parity_pair`, `EuclideanIntersection.boundary_intersection_eq_point_boundary_intersection` | `BeyondSperner.Euclidean.Intersection.Basic` |
+| Lemma 10.2 (`0 < n`) and its zero-dimensional counterexample | `EuclideanIntersection.exists_generalPosition_endpoint`, `EuclideanIntersection.exists_pointChainIntersection_ne_zero_of_finrank_zero`, `EuclideanIntersection.pointChainIntersection_eq_zero_of_boundary_intersection_eq_zero` | `BeyondSperner.Euclidean.Intersection.GeneralPosition` |
+| Lemma 10.4, including the exact-codimension-one facet parity | `EuclideanIntersection.exists_exactly_two_facets_of_not_isGeneric`, `EuclideanIntersection.facet_point_parity_of_not_isGeneric`, `EuclideanIntersection.boundary_intersections_eq_zero_of_not_isGeneric` | `BeyondSperner.Euclidean.Intersection.DegenerateSimplex` |
+| Theorem 10.5 and Corollary 10.6 | `EuclideanIntersection.chain_stokes_of_pairwise`, `EuclideanIntersection.oneChainIntersection_boundary_eq_pointChainIntersection_boundary`, `EuclideanIntersection.pointChainIntersection_eq_zero_of_boundary_eq_zero` | `BeyondSperner.Euclidean.Intersection.Stokes` |
+| Lemma 10.7, forward intersection-number proof | `EuclideanIntersection.exists_envelope_simplex_of_generalPosition` | `BeyondSperner.Euclidean.Intersection.EnvelopeCoverage` |
+| Theorem 10.8, paper's general-position/limit route in envelope form | `EuclideanIntersection.exists_generic_envelope_simplex` | `BeyondSperner.Euclidean.Intersection.AffineColoring` |
+| Theorem 10.8, paper route converted to formula (40) | `AffineColoring.Intersection.exists_isAffineSolution` | `FormalizationInterface.AffineSolutionIntersection` |
+| Theorem 10.9, provider-parameterized interior and boundary layers | `AffineColoring.exists_fullSimplex_mem_convexHull_colorPoints_of_isStrictInteriorPoint_of_solution_provider`, `AffineColoring.exists_fullSimplex_mem_convexHull_colorPoints_of_interior_cover` | `BeyondSperner.Coloring.VectorHedgehog` |
+| Theorem 10.9 through the paper route | `AffineColoring.Intersection.exists_fullSimplex_mem_convexHull_colorPoints_of_isVectorHedgehogColoring` | `FormalizationInterface.VectorHedgehogIntersection` |
+| Lemma 10.3 | `AffineGeometry.exists_affineIndependent_subset_card_le_finrank_add_one`, `AffineGeometry.exists_subset_card_eq_finrank_add_one_mem_convexHull` | `BeyondSperner.Euclidean.AffineGeometry` |
+| formula (40) and Theorem 10.8, barycentric-coordinate form | `AffineColoring.completedPoints_eq_formula`, `AffineColoring.exists_isSolution` | `BeyondSperner.Coloring.Affine` |
+| Theorem 10.8, arbitrary affine basis | `AffineColoring.exists_isAffineSolution` | `BeyondSperner.Coloring.Affine` |
+| Lemma 10.7 envelope-covering conclusion, derived from Theorem 10.8 without general position | `AffineColoring.exists_envelope_simplex` | `BeyondSperner.Coloring.AffineEnvelope` |
+| Theorem 10.9, strict-interior cyclic half-space argument | `AffineColoring.exists_mem_finRotate_not_mem_of_nonempty_ne_univ`, `AffineColoring.exists_fullSimplex_mem_convexHull_colorPoints_of_isStrictInteriorPoint` | `BeyondSperner.Coloring.VectorHedgehog` |
+| Theorem 10.9, finite-closed-union boundary extension | `AffineColoring.isClosed_fullSimplexColorRegion`, `AffineColoring.exists_fullSimplex_mem_convexHull_colorPoints_of_isVectorHedgehogColoring` | `BeyondSperner.Coloring.VectorHedgehog` |
+| Theorem 10.9 on the concrete Freudenthal--Scarf triangulation (`0 < N`) | `IntegerSimplex.exists_fullSimplex_mem_convexHull_colorPoints_of_isVectorHedgehogColoring` | `BeyondSperner.Freudenthal.Applications.VectorHedgehog` |
 | arbitrary finite geometric triangulation, induced reference-face family and dimension bound | `GeometricTriangulation.faceComplex`, `family`, `faceComplex_card_le` | `BeyondSperner.Geometry.Triangulation.Core` |
 | exact geometric coverage of every induced reference-face complex | `mem_referenceFace_iff_coord`, `exists_faceComplex_simplex_containing`, `realizedFaceComplexSpace_eq_referenceFace` | `BeyondSperner.Geometry.Triangulation.Core` |
 | full geometric/abstract face conversion and finite facet extension | `mem_faceComplex_univ_iff`, `abstractFace`, `realize_abstractFace`, `exists_facet_superset` | `BeyondSperner.Geometry.Triangulation.Core` |
@@ -206,23 +226,25 @@ The `BeyondSperner` development is self-contained apart from its mathlib depende
 | automatic purity of a finite geometric triangulation | `interior_lowerDimensionalLocus_eq_empty`, `referenceFace_subset_fullDimensionalSpace`, `exists_full_face_superset`, `facetsHaveCardinality`, `family_full_isPure_of_data` | `BeyondSperner.Geometry.Triangulation.Purity` |
 | reference-face intersection, boundary uniqueness, and the pseudo/chain bridge | `referenceFace_inter`, `boundary_index_unique`, `boundaryMembershipCount_eq_one_iff`, `IsNonbranching.isPseudoSimplex`, `IsNonbranching.isChainSimplex` | `BeyondSperner.Geometry.Triangulation.Core` |
 | automatic local incidence and non-branching for every finite geometric triangulation | `cofaceCount_eq_one_of_liesInReferenceBoundary`, `cofaceCount_eq_two_of_not_liesInReferenceBoundary`, `isNonbranching` | `BeyondSperner.Geometry.Triangulation.Nonbranching` |
-| Theorems 10.9 and 10.10 for an arbitrary finite geometric triangulation | `geometric_theorem10_9`, `geometric_theorem10_10` | `BeyondSperner.Geometry.Triangulation.Applications` |
-| arbitrary finite geometric triangulation through the paper route | `geometric_theorem10_9_via_intersection`, `geometric_theorem10_10_via_intersection` | `FormalizationInterface.GeometricApplicationsIntersection` |
-| Theorem 10.10, centered-coordinate core | `AffineColoring.theorem10_10_coordinate_core`, `theorem10_10_core` | `BeyondSperner.Coloring.InwardTangent` |
-| Theorem 10.10, public-solution coefficient reconstruction | `zero_mem_colorHull_of_affineSolution`, `theorem10_10_core_of_affineSolution`, `theorem10_10_of_core` | `BeyondSperner.Coloring.InwardTangent` |
-| Theorem 10.10 through the paper route | `AffineColoring.theorem10_10_via_intersection` | `FormalizationInterface.Theorem10_10Intersection` |
-| Theorem 10.10, top-simplex conclusion under explicit triangulation obligations | `AffineColoring.theorem10_10` | `BeyondSperner.Coloring.InwardTangent` |
+| Theorems 10.9 and 10.10 for an arbitrary finite geometric triangulation | `GeometricTriangulation.exists_fullSimplex_mem_convexHull_colorPoints_of_isVectorHedgehogColoring`, `GeometricTriangulation.exists_fullSimplex_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring` | `BeyondSperner.Geometry.Triangulation.Applications` |
+| arbitrary finite geometric triangulation through the paper route | `GeometricTriangulation.Intersection.exists_fullSimplex_mem_convexHull_colorPoints_of_isVectorHedgehogColoring`, `GeometricTriangulation.Intersection.exists_fullSimplex_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring` | `FormalizationInterface.GeometricApplicationsIntersection` |
+| Theorem 10.10, centered-coordinate core | `AffineColoring.exists_face_barycentricCenter_mem_convexHull_colorPoints`, `AffineColoring.exists_face_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring` | `BeyondSperner.Coloring.InwardTangent` |
+| Theorem 10.10, public-solution coefficient reconstruction | `AffineColoring.zero_mem_colorHull_of_affineSolution`, `AffineColoring.exists_face_zero_mem_convexHull_colorPoints_of_isAffineSolution`, `AffineColoring.exists_fullSimplex_zero_mem_convexHull_colorPoints_of_face` | `BeyondSperner.Coloring.InwardTangent` |
+| Theorem 10.10 through the paper route | `AffineColoring.Intersection.exists_fullSimplex_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring` | `FormalizationInterface.InwardTangentIntersection` |
+| Theorem 10.10, top-simplex conclusion under explicit triangulation obligations | `AffineColoring.exists_fullSimplex_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring` | `BeyondSperner.Coloring.InwardTangent` |
 | positive-scale Freudenthal/associated-complex purity used by Theorem 10.10 | `freudenthalComplex_isPureOfCardinality_of_pos`, `associatedComplex_isPureOfCardinality_of_pos` | `BeyondSperner.Freudenthal.Geometry`, `BeyondSperner.Freudenthal.Boundary` |
 | arbitrary-index coordinate-face transport | `isDominant_coordinateFace_image_iff_ambient`, `isCell_coordinateFace_image_iff_ambient`, `isAssociatedSimplex_coordinateFace_image_iff_ambient` | `BeyondSperner.Freudenthal.Faces` |
 | arbitrary-face ambient inclusion (`0 < N`) | `associatedComplex_subset_freudenthalComplex_of_pos`, `associatedComplex_subset_full_of_pos` | `BeyondSperner.Freudenthal.Faces`, `BeyondSperner.Freudenthal.Boundary` |
-| Theorem 10.10 on the concrete Freudenthal--Scarf triangulation (`0 < N`) | `affinePointPosition_mem_referenceSimplex`, `affinePointPosition_injective`, `freudenthal_theorem10_10` | `BeyondSperner.Freudenthal.Applications.InwardTangent` |
+| Theorem 10.10 on the concrete Freudenthal--Scarf triangulation (`0 < N`) | `IntegerSimplex.affinePointPosition_mem_referenceSimplex`, `IntegerSimplex.affinePointPosition_injective`, `IntegerSimplex.exists_fullSimplex_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring` | `BeyondSperner.Freudenthal.Applications.InwardTangent` |
 | Appendix A.2 lexicographic extension | `OnePointExtension.IsLexicographicFor`, `exists_lexicographicExtension` | `BeyondSperner.OrientedMatroid.LexicographicExtension` |
 | Lemmas 8.1--8.4 | declarations in `PerturbationSetup` | `BeyondSperner.Coloring.Matroid.General` |
-| Theorem 8.5 | `MatroidColoring.theorem8_5` | `BeyondSperner.Coloring.Matroid.General` |
+| Theorem 8.5 | `MatroidColoring.exists_isSolution` | `BeyondSperner.Coloring.Matroid.General` |
 | generalized Scarf theorem | `GeneralizedScarf.generalizedScarf` | `BeyondSperner.Scarf.Generalized` |
 | classical Scarf theorem and colorful cell | `ClassicalScarf.classicalScarf_odd`, `exists_colorfulCell` | `BeyondSperner.Scarf.Classical` |
 | Lemma 3.1 and Scarf's Brouwer theorem | `ScarfBrouwer.envelope_coordDiameter_lt`, `scarf_brouwer_fixedPoint` | `BeyondSperner.FixedPoint.ScarfBrouwer` |
 | Brouwer on an arbitrary finite affine simplex | `affineSimplexHomeomorphStandard`, `scarf_brouwer_fixedPoint_affineSimplex` | `BeyondSperner.FixedPoint.AffineBrouwer` |
+| Brouwer on nonempty compact convex subsets of finite-dimensional real inner-product spaces | `ScarfBrouwer.scarf_brouwer_fixedPoint_compactConvex_inner` | `BeyondSperner.FixedPoint.CompactConvexBrouwer` |
+| Brouwer on nonempty compact convex subsets of finite-dimensional real normed spaces | `ScarfBrouwer.scarf_brouwer_fixedPoint_compactConvex` | `BeyondSperner.FixedPoint.CompactConvexBrouwer` |
 | Lemmas 4.1--4.3 | `cyclicKey_lt_cyclicStep_of_ne`, `exists_pair_coord_ne_of_isCell`, `coord_range_of_isCell` | `BeyondSperner.Freudenthal.IntegerSimplex` |
 | Lemma 4.6, finite-set equivalence | `image_prefixMap_stepSimplex`, `isFreudenthalTopSimplex_iff_cumulative` | `BeyondSperner.Freudenthal.IntegerSimplex`, `BeyondSperner.Freudenthal.Complex` |
 | Lemma 4.7 | `coord_eq_zero_of_isCell_of_not_mem`, `coord_eq_zero_of_mem_associatedComplex_of_not_mem` | `BeyondSperner.Freudenthal.IntegerSimplex` |
@@ -261,7 +283,7 @@ The `BeyondSperner` development is self-contained apart from its mathlib depende
 
 - Lemma 7.3 has a one-iteration Rethlas proof with independent verifier verdict `correct`, no
   critical errors, and no reported gaps.  The preserved artifact is
-  [`../Rethlas/BeyondSperner/Lemma7_3.verified.md`](../Rethlas/BeyondSperner/Lemma7_3.verified.md).
+  [`../Rethlas/BeyondSperner/DominantExtendCell.verified.md`](../Rethlas/BeyondSperner/DominantExtendCell.verified.md).
   It also independently recovers the
   empty-`X` counterexample, confirming that `[Nonempty X]` is semantically necessary.
 - A Rethlas verdict is evidence about the informal proof blueprint, not a Lean proof.  For Lemma
@@ -311,7 +333,10 @@ geometric face with the realization of a face of the independently defined abstr
 The cumulative coordinate embedding is an explicit equivalence with the integral monotone
 simplex, and its real affine counterpart carries and reflects the geometric faces.
 Sections 7 and 9 are now covered through the vector Scarf theorem and the resulting Kakutani
-fixed-point theorem.  Section 10 is covered through its `F₂` chain identities, normalized
+fixed-point theorem. The latter is further transported from the finite standard simplex to every
+nonempty compact convex subset of an arbitrary finite-dimensional real normed space, both in
+relative closed-graph form and in the compact-valued upper-hemicontinuous form. Section 10 is
+covered through its `F₂` chain identities, normalized
 arbitrary-map pushforward, the exact general-position/intersection definitions, Lemmas 10.1--10.4,
 Theorem 10.5, Corollary 10.6, and the paper's forward intersection-number proofs of Lemma 10.7
 and Theorem 10.8.
@@ -335,7 +360,14 @@ arbitrary-face compatibility, ambient inclusion, normalized affine realization, 
 resulting Theorems 10.9 and 10.10 are all proved.  The arbitrary finite geometric-triangulation
 abstraction is also complete at this obligation layer.  Provider-parameterized proofs now route
 both later theorems, the arbitrary geometric applications, and the Freudenthal applications
-through either independent Theorem 10.8 proof.  Separately, barycentric coordinates now transport
-the Section 3 Scarf--Brouwer theorem from the standard simplex to the convex hull of any finite
-real affine basis.  Extending this to every nonempty compact convex subset remains a genuine scope
-expansion, not discharge of any claim listed in this paragraph.
+through either independent Theorem 10.8 proof.  Separately, the Scarf--Brouwer development now
+runs from the standard simplex through the convex hull of any finite real affine basis to every
+nonempty compact convex subset of an arbitrary finite-dimensional real normed space.  The last
+step uses a containing affine simplex and a nonexpansive Euclidean metric-projection retraction,
+then transports the conclusion through a continuous linear equivalence to Euclidean space.  It
+does not call a pre-existing general Brouwer or Schauder fixed-point theorem.
+
+The compact-convex Kakutani extension uses the same enclosing-simplex, Euclidean
+metric-projection, and continuous-linear-equivalence infrastructure. It keeps correspondence
+values in the ambient space, proves the graph closed in the relative product `K × E`, and does not
+call a pre-existing general Kakutani or Schauder fixed-point theorem.
