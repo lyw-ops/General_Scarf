@@ -1,0 +1,39 @@
+name: Lean CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lean-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Lean and build
+        uses: leanprover/lean-action@v1
+        with:
+          auto-config: false
+          build: true
+          test: false
+
+      - name: Audit all BeyondSperner declarations
+        run: lake env lean FormalizationInterface/AuditAll.lean
+
+      - name: Print representative axiom closures
+        run: lake env lean FormalizationInterface/Audit.lean

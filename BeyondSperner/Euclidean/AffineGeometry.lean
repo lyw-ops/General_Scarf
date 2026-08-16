@@ -34,7 +34,7 @@ theorem exists_affineIndependent_face {sigma : Finset E} {x : E}
 
 /-- The affinely independent, at-most-`m + 1` form of Carathéodory used to
 prove Lemma 10.3. -/
-theorem lemma10_3_atMost {sigma : Finset E} {x : E} {m : ℕ}
+theorem exists_affineIndependent_subset_card_le_finrank_add_one {sigma : Finset E} {x : E} {m : ℕ}
     (hdim : Module.finrank ℝ (vectorSpan ℝ (sigma : Set E)) = m)
     (hx : x ∈ convexHull ℝ (sigma : Set E)) :
     ∃ tau : Finset E, tau ⊆ sigma ∧ tau.card ≤ m + 1 ∧
@@ -66,13 +66,13 @@ theorem lemma10_3_atMost {sigma : Finset E} {x : E} {m : ℕ}
 /-- Lemma 10.3 in the paper's exact face-cardinality form.  If the affine
 dimension of the convex hull of `sigma` is `m`, every point of that convex
 hull lies in the convex hull of a subset of exactly `m + 1` vertices. -/
-theorem lemma10_3 {sigma : Finset E} {x : E} {m : ℕ}
+theorem exists_subset_card_eq_finrank_add_one_mem_convexHull {sigma : Finset E} {x : E} {m : ℕ}
     (hdim : Module.finrank ℝ (vectorSpan ℝ (sigma : Set E)) = m)
     (hx : x ∈ convexHull ℝ (sigma : Set E)) :
     ∃ tau : Finset E, tau ⊆ sigma ∧ tau.card = m + 1 ∧
       x ∈ convexHull ℝ (tau : Set E) := by
   obtain ⟨tau, htau, htauCard, _htauIndependent, hxTau⟩ :=
-    lemma10_3_atMost hdim hx
+    exists_affineIndependent_subset_card_le_finrank_add_one hdim hx
   have hsigmaNonempty : sigma.Nonempty := by
     by_contra hsigma
     have hsigmaEmpty : sigma = ∅ := Finset.not_nonempty_iff_eq_empty.mp hsigma

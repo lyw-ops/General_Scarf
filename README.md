@@ -1,5 +1,7 @@
 # General Scarf in Lean
 
+[![Lean CI](https://github.com/lyw-ops/General_Scarf/actions/workflows/lean.yml/badge.svg)](https://github.com/lyw-ops/General_Scarf/actions/workflows/lean.yml)
+
 This repository contains a Lean formalization of the main dependency structure and applications
 in Nikolai Ivanov's [*Scarf's theorems, simplices, and oriented
 matroids*](https://arxiv.org/abs/2207.10832).
@@ -30,7 +32,7 @@ flowchart TD
     VS["Realizable/vector Scarf<br/>Section 7"]
     CL["Classical colorful-cell Scarf"]
     BR["Scarf → Brouwer<br/>standard and affine simplices<br/>finite-dimensional compact convex sets"]
-    KA["Vector Scarf → Kakutani<br/>closed-graph limit"]
+    KA["Vector Scarf → Kakutani<br/>simplex and compact-convex forms"]
 
     CH["Section 10 chains and<br/>intersection numbers"]
     T8A["Theorem 10.8<br/>paper intersection route"]
@@ -81,28 +83,39 @@ retraction in Euclidean space, applies the affine-simplex theorem, and transport
 through a continuous linear equivalence. No pre-existing general Brouwer or Schauder fixed-point
 theorem is used.
 
+## Kakutani fixed-point theorem
+
+The Section 9 Scarf argument first proves Kakutani's theorem on a finite standard simplex. The
+module [`BeyondSperner/FixedPoint/CompactConvexKakutani.lean`](BeyondSperner/FixedPoint/CompactConvexKakutani.lean)
+then transports it to every nonempty compact convex subset of an arbitrary finite-dimensional
+real normed space. It provides both a closed-graph formulation and the usual compact-valued,
+convex-valued, upper-hemicontinuous formulation. The construction reuses the enclosing affine
+simplex, Euclidean metric projection, and continuous-linear-equivalence infrastructure; it does
+not invoke a pre-existing general Kakutani or Schauder fixed-point theorem.
+
 ## Build
 
 The project uses Lean `4.33.0` and mathlib `v4.33.0`, pinned by `lean-toolchain` and
 `lake-manifest.json`.
 
+The complete local verification has been run successfully with:
+
 ```bash
 lake build
-```
-
-The formalization and representative axiom closures can also be checked with:
-
-```bash
 lake env lean FormalizationInterface/AuditAll.lean
 lake env lean FormalizationInterface/Audit.lean
 ```
+
+The Lean CI workflow is configured to run the same three commands on pushes to `main`, pull
+requests targeting `main`, and manual dispatch.  The badge reports the remote workflow status;
+local success and remote CI success are separate checks.
 
 ## Repository layout
 
 - [`BeyondSperner.lean`](BeyondSperner.lean) is the umbrella import.
 - [`BeyondSperner/`](BeyondSperner/) contains the mathematical formalization.
 - [`BeyondSperner/FixedPoint`](BeyondSperner/FixedPoint) contains the Scarf routes to Brouwer and
-  Kakutani, including the compact-convex Brouwer theorem.
+  Kakutani, including their finite-dimensional compact-convex extensions.
 - [`FormalizationInterface/`](FormalizationInterface/) contains theorem-route adapters, status
   documentation, and executable audits.
 

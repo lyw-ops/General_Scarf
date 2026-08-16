@@ -1231,7 +1231,7 @@ theorem pointChainIntersection_singleton_boundary
 /-- The simplex-level equality in Lemma 10.1 has exactly the paper's
 boundary-pairing interpretation.  This lemma isolates the chain algebra from
 the still-geometric parity statement. -/
-theorem lemma10_1_pairing_iff_facet_endpoint_sum
+theorem boundary_intersection_eq_iff_facet_endpoint_sum_eq
     (sigma omega : Finset E) (homega : IsMSimplex 1 omega) :
     oneChainIntersection (boundary (singletonChain sigma))
         (singletonChain omega) =
@@ -1245,7 +1245,7 @@ theorem lemma10_1_pairing_iff_facet_endpoint_sum
 
 /-- In characteristic two, the indicator sum of two distinct members of a
 finite set vanishes. -/
-theorem sum_two_distinct_indicators_zmod2
+theorem sum_two_distinct_indicators_mod_two
     {α : Type*} [DecidableEq α]
     (s : Finset α) (a b : α) (ha : a ∈ s) (hb : b ∈ s) (hab : a ≠ b) :
     (∑ v ∈ s, if v = a ∨ v = b then (1 : ZMod 2) else 0) = 0 := by
@@ -1512,7 +1512,7 @@ theorem facet_endpoint_parity_pair
                   · exact or_congr (hzeroA_iff v hv) (hzeroB_iff v hv)
                   · rfl
                   · rfl
-          _ = 0 := sum_two_distinct_indicators_zmod2
+          _ = 0 := sum_two_distinct_indicators_mod_two
             sigma ia.1 ib.1 ia.2 ib.2 hiabVal
           _ = pointIntersectionNumber sigma x +
                 pointIntersectionNumber sigma y := by
@@ -1541,7 +1541,7 @@ theorem facet_endpoint_parity_pair
 
 /-- Full-cardinality form of the paper's Lemma 10.1.  This is the actual
 boundary/intersection equality, not merely a rewriting equivalence. -/
-theorem lemma10_1_fullCard
+theorem boundary_intersection_eq_point_boundary_intersection_of_full_card
     [FiniteDimensional ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E]
     [ContinuousSMul ℝ E] [T2Space E]
@@ -1564,7 +1564,7 @@ theorem lemma10_1_fullCard
 /-- Lemma 10.1 in dimension-indexed form: a generic `n`-simplex in an
 `n`-dimensional real vector space satisfies the boundary/intersection
 identity against every one-simplex in the paper's exact general position. -/
-theorem lemma10_1
+theorem boundary_intersection_eq_point_boundary_intersection
     [FiniteDimensional ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E]
     [ContinuousSMul ℝ E] [T2Space E]
@@ -1577,7 +1577,7 @@ theorem lemma10_1
         (singletonChain omega) =
       pointChainIntersection (singletonChain sigma)
         (boundary (singletonChain omega)) := by
-  apply lemma10_1_fullCard sigma omega hgeneric
+  apply boundary_intersection_eq_point_boundary_intersection_of_full_card sigma omega hgeneric
   · simpa [IsMSimplex, hdim] using hsigma
   · exact hgp
 

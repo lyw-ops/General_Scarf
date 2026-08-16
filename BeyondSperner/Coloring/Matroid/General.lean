@@ -1206,7 +1206,7 @@ variable [Fintype I] [Fintype V] [DecidableEq I] [DecidableEq V]
   [DecidableEq M]
 
 /-- Theorem 8.5: the general matroid-coloring theorem, without nondegeneracy or parity. -/
-theorem theorem8_5
+theorem exists_isSolution
     [Fintype M] (D : SimplexFamily I V) (F : Framework I M)
     (hchain : D.IsChainSimplex) (c : Coloring D F) :
     ∃ C : Finset I, ∃ τ : Finset V, IsSolution D F c C τ := by
@@ -1216,7 +1216,7 @@ theorem theorem8_5
   let c' : Coloring D F' := P.deletedColoring (V := V) D c
   have hnd' : F'.IsNondegenerate := by
     simpa [F'] using P.deletedFramework_isNondegenerate
-  have hnonempty := (theorem6_5 D F' hchain hnd' c').1
+  have hnonempty := (solutionPairs_nonempty_and_odd_card D F' hchain hnd' c').1
   obtain ⟨p, hp⟩ := hnonempty
   rcases p with ⟨C, tau⟩
   have hsol' : IsSolution D F' c' C tau :=

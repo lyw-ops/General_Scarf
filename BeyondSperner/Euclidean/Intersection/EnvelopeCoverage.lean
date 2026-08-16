@@ -105,7 +105,7 @@ The two general-position hypotheses are precisely the paper's condition that
 `z` be in general position with respect to the pushed envelope chain and the
 reference simplex.  The conclusion is stated on the literal envelope
 complex, with the exact cardinality and convex-hull witness needed later. -/
-theorem lemma10_7_intersection
+theorem exists_envelope_simplex_of_generalPosition
     {I V : Type*} [Fintype I] [Fintype V] [Nonempty I]
     [DecidableEq I] [DecidableEq V]
     (D : SimplexFamily I V)
@@ -200,7 +200,7 @@ theorem lemma10_7_intersection
 
   have htotalIntersection :
       pointChainIntersection (mappedChain + referenceChain) pointChain = 0 := by
-    exact corollary10_6 n (mappedChain + referenceChain) rfl htotalM hcycle z htotalGP
+    exact pointChainIntersection_eq_zero_of_boundary_eq_zero n (mappedChain + referenceChain) rfl htotalM hcycle z htotalGP
 
   have hzReferenceRealization : z ∈ realization referenceSimplex := by
     simpa [realization, referenceSimplex, coe_univ_image_affineBasis] using hz

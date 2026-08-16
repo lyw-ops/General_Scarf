@@ -365,7 +365,7 @@ odd, and in particular at least one exists. -/
 theorem classicalScarf_odd
     (F : IndexedLinearOrders I V) (c : V → I) :
     (colorfulCellPairs F c).Nonempty ∧ Odd (colorfulCellPairs F c).card := by
-  have h := MatroidColoring.theorem6_5 F.associatedFamily (simplexFramework I)
+  have h := MatroidColoring.solutionPairs_nonempty_and_odd_card F.associatedFamily (simplexFramework I)
     F.associatedFamily_isChainSimplex simplexFramework_isNondegenerate
     (liftColoring F.associatedFamily c)
   rwa [solutionPairs_associated_eq_colorfulCellPairs F c] at h

@@ -302,7 +302,7 @@ def IsSolution
 /-- Theorem 10.8 in barycentric-coordinate normal form.  The arbitrary-affine-
 basis version below transports this result through barycentric coordinates.
 No general-position or intersection-number hypothesis is used in this proof. -/
-theorem theorem10_8_coordinate
+theorem exists_isSolution
     (c : D.Vertex → I → ℝ) (z : I → ℝ)
     (hc : ∀ v, HasUnitSum (c v)) (hz : IsStandardSimplexPoint z)
     (hchain : D.IsChainSimplex) :
@@ -310,7 +310,7 @@ theorem theorem10_8_coordinate
   let F := framework D c z hc hz
   let color := coloring D c z hc hz
   obtain ⟨C, tau, htau, hC, hcard, hgood⟩ :=
-    MatroidColoring.theorem8_5 D F hchain color
+    MatroidColoring.exists_isSolution D F hchain color
   let S : Finset (Label D) := completedLabels D c z hc hz C tau htau
   let X : Set (Label D) := S
   have hSeq : S = MatroidColoring.completedImage D F color C tau htau := rfl
@@ -447,10 +447,10 @@ def IsAffineSolution
         AffineIndependent ℝ (fun p : ↥(S : Set P) ↦ p.1)
 
 /-- Theorem 10.8 in the paper's arbitrary affine-basis form.  The proof
-transports to barycentric coordinates, applies `theorem10_8_coordinate`,
+transports to barycentric coordinates, applies `exists_isSolution`,
 and transports cardinality, convex-hull membership, and affine
 independence back along the injective affine coordinate map. -/
-theorem theorem10_8
+theorem exists_isAffineSolution
     (b : AffineBasis I ℝ P) (c : D.Vertex → P) (z : P)
     (hz : z ∈ convexHull ℝ (Set.range b))
     (hchain : D.IsChainSimplex) :
@@ -468,7 +468,7 @@ theorem theorem10_8
   have hzz : IsStandardSimplexPoint zz :=
     ⟨hzzNonneg, b.sum_coord_apply_eq_one z⟩
   obtain ⟨C, tau, hsol⟩ :=
-    theorem10_8_coordinate D cc zz hcc hzz hchain
+    exists_isSolution D cc zz hcc hzz hchain
   rcases hsol with ⟨htau, hC, hcard, hdata⟩
   dsimp only at hdata
   rcases hdata with

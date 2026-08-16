@@ -1111,7 +1111,7 @@ noncomputable def solutionPairs (D : SimplexFamily I V) (F : Framework I M)
   Finset.univ.filter fun p ↦ IsSolution D F c p.1 p.2
 
 /-- Theorem 6.5, including the oddness assertion. -/
-theorem theorem6_5
+theorem solutionPairs_nonempty_and_odd_card
     [Fintype M] (D : SimplexFamily I V) (F : Framework I M)
     (hchain : D.IsChainSimplex) (hnd : F.IsNondegenerate)
     (c : Coloring D F) :

@@ -78,7 +78,7 @@ proper nonempty `C`, choose `i ∈ C` whose successor leaves `C`.  All selected
 colors and all artificial basis vertices then lie in the closed half-space
 `b.coord (succ i) ≤ 0`, contradicting strict positivity of the target point.
 -/
-theorem theorem10_9_interior_of_solution_provider {n : ℕ}
+theorem exists_fullSimplex_mem_convexHull_colorPoints_of_isStrictInteriorPoint_of_solution_provider {n : ℕ}
     (D : SimplexFamily (Fin (n + 1)) V)
     (b : AffineBasis (Fin (n + 1)) ℝ P)
     (p c : D.Vertex → P)
@@ -153,7 +153,7 @@ theorem theorem10_9_interior_of_solution_provider {n : ℕ}
 
 /-- The strict-interior core of Theorem 10.9 using the default
 oriented-matroid proof of Theorem 10.8. -/
-theorem theorem10_9_interior {n : ℕ}
+theorem exists_fullSimplex_mem_convexHull_colorPoints_of_isStrictInteriorPoint {n : ℕ}
     (D : SimplexFamily (Fin (n + 1)) V)
     (b : AffineBasis (Fin (n + 1)) ℝ P)
     (p c : D.Vertex → P)
@@ -168,8 +168,8 @@ theorem theorem10_9_interior {n : ℕ}
       sigma.card = n + 1 ∧
         z ∈ convexHull ℝ
           (affineSimplexColorPoints D c Finset.univ sigma hsigma : Set P) := by
-  exact theorem10_9_interior_of_solution_provider D b p c hface hhedgehog
-    (fun b' q hq ↦ theorem10_8 D b' c q hq hchain) z hz hzInterior
+  exact exists_fullSimplex_mem_convexHull_colorPoints_of_isStrictInteriorPoint_of_solution_provider D b p c hface hhedgehog
+    (fun b' q hq ↦ exists_isAffineSolution D b' c q hq hchain) z hz hzInterior
 
 /-- Proof-independent color set of an abstract simplex.  The subtype in the
 domain remembers that the colored vertex belongs to the ambient family. -/
@@ -239,7 +239,7 @@ The supplied theorem covers `interior Γ`.  The target color region is
 a finite union of closed finite convex hulls, hence closed.  Since a simplex
 is the closure of its nonempty interior, that region covers the whole
 reference simplex. -/
-theorem theorem10_9_of_interior_provider {n : ℕ}
+theorem exists_fullSimplex_mem_convexHull_colorPoints_of_interior_cover {n : ℕ}
     (D : SimplexFamily (Fin (n + 1)) V)
     (b : AffineBasis (Fin (n + 1)) ℝ E)
     (c : D.Vertex → E)
@@ -300,7 +300,7 @@ theorem theorem10_9_of_interior_provider {n : ℕ}
 
 /-- The full vector-hedgehog Theorem 10.9, including boundary points, using
 the default oriented-matroid proof of Theorem 10.8. -/
-theorem theorem10_9 {n : ℕ}
+theorem exists_fullSimplex_mem_convexHull_colorPoints_of_isVectorHedgehogColoring {n : ℕ}
     (D : SimplexFamily (Fin (n + 1)) V)
     (b : AffineBasis (Fin (n + 1)) ℝ E)
     (p c : D.Vertex → E)
@@ -314,9 +314,9 @@ theorem theorem10_9 {n : ℕ}
       sigma.card = n + 1 ∧
         z ∈ convexHull ℝ
           (affineSimplexColorPoints D c Finset.univ sigma hsigma : Set E) := by
-  exact theorem10_9_of_interior_provider D b c
+  exact exists_fullSimplex_mem_convexHull_colorPoints_of_interior_cover D b c
     (fun q hq hqInterior ↦
-      theorem10_9_interior D b p c hchain hface hhedgehog
+      exists_fullSimplex_mem_convexHull_colorPoints_of_isStrictInteriorPoint D b p c hchain hface hhedgehog
         q hq hqInterior) z hz
 
 end Normed

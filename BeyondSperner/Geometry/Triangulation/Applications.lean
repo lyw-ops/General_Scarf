@@ -21,7 +21,7 @@ variable {n : ℕ} (b : AffineBasis (Fin (n + 1)) ℝ E)
 variable (T : Data b)
 
 /-- Theorem 10.9 for an arbitrary finite geometric triangulation. -/
-theorem geometric_theorem10_9
+theorem exists_fullSimplex_mem_convexHull_colorPoints_of_isVectorHedgehogColoring
     (c : (family b T).Vertex → E)
     (hhedgehog : AffineColoring.IsVectorHedgehogColoring
       (family b T) b (fun v ↦ v.1.1) c)
@@ -32,14 +32,14 @@ theorem geometric_theorem10_9
           z ∈ convexHull ℝ
             (AffineColoring.affineSimplexColorPoints
               (family b T) c Finset.univ sigma hsigma : Set E) := by
-  exact AffineColoring.theorem10_9 (family b T) b
+  exact AffineColoring.exists_fullSimplex_mem_convexHull_colorPoints_of_isVectorHedgehogColoring (family b T) b
     (fun v ↦ v.1.1) c ((isNonbranching b T).isChainSimplex b T)
     (family_face_coordinate b T) hhedgehog z hz
 
 /-- Theorem 10.10 for an arbitrary finite geometric triangulation.  The
 top-simplex extension is supplied by the automatic purity theorem, rather
 than by a purity parameter. -/
-theorem geometric_theorem10_10
+theorem exists_fullSimplex_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring
     (hb : AffineColoring.IsCenteredAffineBasis b)
     (c : (family b T).Vertex → E)
     (hinward : AffineColoring.IsInwardTangentColoring
@@ -55,7 +55,7 @@ theorem geometric_theorem10_10
         (Fintype.card (Fin (n + 1))) := by
     simpa using family_full_isPure_of_data b T
   obtain ⟨sigma, hsigma, hcard, hzero⟩ :=
-    AffineColoring.theorem10_10 (family b T) b hb
+    AffineColoring.exists_fullSimplex_zero_mem_convexHull_colorPoints_of_isInwardTangentColoring (family b T) b hb
       (fun v ↦ v.1.1) c ((isNonbranching b T).isChainSimplex b T)
       (family_face_coordinate b T) hinward
       (family_subset_full b T) hPure
