@@ -29,7 +29,7 @@ flowchart TD
 
     VS["Realizable/vector Scarf<br/>Section 7"]
     CL["Classical colorful-cell Scarf"]
-    BR["Scarf → Brouwer<br/>standard and affine simplices"]
+    BR["Scarf → Brouwer<br/>standard and affine simplices<br/>finite-dimensional compact convex sets"]
     KA["Vector Scarf → Kakutani<br/>closed-graph limit"]
 
     CH["Section 10 chains and<br/>intersection numbers"]
@@ -64,6 +64,23 @@ The two Theorem 10.8 nodes are dependency-independent: one follows the paper's i
 route, while the other is supplied by the oriented-matroid coloring route. Both feed the common
 Theorem 10.9 and Theorem 10.10 application layers.
 
+## Brouwer fixed-point theorem
+
+The formalized Scarf route now proves Brouwer's fixed-point theorem at three levels:
+
+1. continuous self-maps of a finite standard simplex;
+2. continuous self-maps of the convex hull of an arbitrary finite real affine basis;
+3. continuous self-maps of any nonempty compact convex subset of an arbitrary
+   finite-dimensional real normed space.
+
+The final public theorem is
+`BeyondSperner.ScarfBrouwer.scarf_brouwer_fixedPoint_compactConvex`, defined in
+[`BeyondSperner/FixedPoint/CompactConvexBrouwer.lean`](BeyondSperner/FixedPoint/CompactConvexBrouwer.lean).
+It contains the compact set in a full affine simplex, constructs the nonexpansive nearest-point
+retraction in Euclidean space, applies the affine-simplex theorem, and transports the result back
+through a continuous linear equivalence. No pre-existing general Brouwer or Schauder fixed-point
+theorem is used.
+
 ## Build
 
 The project uses Lean `4.33.0` and mathlib `v4.33.0`, pinned by `lean-toolchain` and
@@ -84,6 +101,8 @@ lake env lean FormalizationInterface/Audit.lean
 
 - [`BeyondSperner.lean`](BeyondSperner.lean) is the umbrella import.
 - [`BeyondSperner/`](BeyondSperner/) contains the mathematical formalization.
+- [`BeyondSperner/FixedPoint`](BeyondSperner/FixedPoint) contains the Scarf routes to Brouwer and
+  Kakutani, including the compact-convex Brouwer theorem.
 - [`FormalizationInterface/`](FormalizationInterface/) contains theorem-route adapters, status
   documentation, and executable audits.
 
